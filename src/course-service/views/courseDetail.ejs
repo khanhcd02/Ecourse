@@ -1,0 +1,41 @@
+<h1>Lessons </h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ordinal Number</th>
+            <th>Title</th>
+            <th>Content</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% lessons.forEach(lesson => { %>
+            <tr>
+                <td><%= lesson.Ordinal_number %></td>
+                <td><%= lesson.Title %></td>
+                <td><%= lesson.Content %></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+<a href="/courses/addLesson/<%= courseId %>" class="btn btn-primary">Add Lesson</a>
+
+<h1>Exams </h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Exam time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% exams.forEach(exam => { %>
+            <tr>
+                <td><%= exam.Title %></td>
+                <td><%= exam.Exam_time %></td>
+                <td><a href="/courses/Exam/<%= exam.Id %>">Thêm câu hỏi</a></td>
+                <td><a href="/Exam/<%= exam.Id %>/takeExam">Demo</a></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+<a href="/courses/addExam/<%= courseId %>" class="btn btn-primary">Add Exam</a>

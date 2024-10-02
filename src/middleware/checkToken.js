@@ -4,7 +4,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const verifyToken = (req,res,next) => {
     const token = req.cookies.accessToken
 
-    if(!token) return res.sendStatus(401)
+    if(!token) return res.redirect("/home/");
 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
@@ -13,7 +13,7 @@ const verifyToken = (req,res,next) => {
         next()
     } catch (error) {
         console.log(error)
-        return res.sendStatus(403)
+        res.redirect("/home/");
     }
 }
 

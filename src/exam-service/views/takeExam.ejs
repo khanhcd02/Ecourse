@@ -1,0 +1,21 @@
+<form action="/Exam/<%= exam.Id %>/submitExam" method="POST">
+    <% questions.forEach((question, index) => { %>
+        <div class="form-group">
+            <label><%= question.Question %></label>
+            <div>
+                <input type="radio" name="answers[<%= index %>]" value="A" required> <%= question.A %>
+            </div>
+            <div>
+                <input type="radio" name="answers[<%= index %>]" value="B" required> <%= question.B %>
+            </div>
+            <div>
+                <input type="radio" name="answers[<%= index %>]" value="C" required> <%= question.C %>
+            </div>
+            <div>
+                <input type="radio" name="answers[<%= index %>]" value="D" required> <%= question.D %>
+            </div>
+        </div>
+    <% }) %>
+    <input type="hidden" name="answerSheetId" value="<%= answerSheetId %>">
+    <button type="submit" class="btn btn-primary">Submit Exam</button>
+</form>

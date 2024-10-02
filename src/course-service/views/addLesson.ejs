@@ -1,0 +1,34 @@
+<h1>Add New Lesson</h1>
+<form id="editorForm" action="/courses/addLesson/<%= courseId %>" method="POST">
+    <input type="hidden" name="Course_id" value="<%= courseId %>">
+    <div class="form-group">
+        <label for="lessonTitle">Lesson Title</label>
+        <input type="text" class="form-control" id="lessonTitle" name="Title" required>
+    </div>
+    <div class="form-group">
+        <label for="ordinalNumber">Ordinal Number</label>
+        <input type="number" class="form-control" id="ordinalNumber" name="Ordinal_number" required>
+    </div>
+    <div class="form-group">
+        <label for="editor">Content</label>
+        <div id="editor">
+            <textarea id="editorContent" name="Content"></textarea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Lesson</button>
+</form>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(editor => {
+            const editorContent = document.querySelector('#editorContent');
+            editor.model.document.on('change:data', () => {
+                editorContent.value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        
+</script>

@@ -1,0 +1,35 @@
+
+    <!-- Team Start -->
+    <div class="container-fluid py-5">
+        <div class="container pt-5 pb-3">
+            <div class="text-center mb-5">
+                <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Courses</h5>
+                <h1>My Courses</h1>
+            </div>
+            <a href="/courses/addCourse">Thêm mới</a>
+            <% if(courses) { %>
+            <div class="row">
+                <% courses.forEach((course) => { %>
+                <div class="col-md-6 col-lg-3 text-center team mb-4">
+                    <div class="team-item rounded overflow-hidden mb-2">
+                        <div class="team-img position-relative">
+                            <img class="img-fluid" src="<%= course.Image ? course.Image : '/users/h1.jpg' %>" alt="course Avatar">
+                            <div class="team-social">
+                            </div>
+                        </div>
+                        <div class="bg-secondary p-4">
+                            <h5><a href="/courses/<%= course.Id %>"><%= course.Name_course %></a></h5>
+                            <p class="m-0"><%= course.Teacher_id %></p>
+                            <p class="m-0"><%= course.Tuition %></p>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+ 

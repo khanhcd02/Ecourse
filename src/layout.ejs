@@ -23,11 +23,12 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/style.css" rel="stylesheet">
+    
 </head>
 
 <body>
     <!-- Topbar Start -->
-    <div class="container-fluid d-none d-lg-block">
+    <div class="container-fluid d-none d-lg-block"  style=" background-color: white;">
         <div class="row align-items-center py-4 px-xl-5">
             <div class="col-lg-3">
                 <a href="" class="text-decoration-none">
@@ -67,7 +68,7 @@
 
 
     <!-- Navbar Start -->
-    <div class="container-fluid">
+    <div class="container-fluid" style=" background-color: white;">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a class="d-flex align-items-center justify-content-between bg-secondary w-100 text-decoration-none" data-toggle="collapse" href="#navbar-vertical" style="height: 67px; padding: 0 30px;">
@@ -103,7 +104,7 @@
                         <div class="navbar-nav py-0">
                             <a href="/home/" class="nav-item nav-link active">Home</a>
                             <a href="about.html" class="nav-item nav-link">About</a>
-                            <a href="course.html" class="nav-item nav-link">Courses</a>
+                            <a href="/home/courses" class="nav-item nav-link">Courses</a>
                             <a href="/home/teachers" class="nav-item nav-link">Teachers</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
@@ -115,7 +116,7 @@
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
                         <% if(user) { %>
-                            <a style="margin-left: 50px;" href="/auth/logout">Xin chào, <%= user.Fullname %></a>
+                            <a style="margin-left: 50px;" href="/user/">Xin chào, <%= user.Fullname %></a>
                             <a class="btn btn-primary py-2 px-4 ml-auto d-none d-lg-block" href="/auth/logout">Logout</a>
                         <% } else { %>
                             <a class="btn btn-primary py-2 px-4 ml-auto d-none d-lg-block" href="/auth/login">Login</a>

@@ -1,0 +1,168 @@
+<!-- Tab links -->
+<div class="tabs">
+  <div class="tab">
+	<button class="tablinks" id="defaultOpen" onclick="openTab(event, 'personal')">personal</button>
+	<button class="tablinks" onclick="openTab(event, 'learning')">learning</button>
+	<button class="tablinks" onclick="openTab(event, 'edit')">edit</button>
+  </div>
+  
+  <!-- Tab content -->
+  <div id="personal" class="tabcontent">
+	<h3><%= user.Fullname %></h3>
+	<img style="max-width: 300px;max-height: 300px;width: 40%;" src="<%= user.QR_code %>" alt="">
+	<h4>Email:</h4><p><%= user.Email %></p>
+	<h4>SDT:</h4><p><%= user.Phone_number %></p>
+	<h4>Vai trò:</h4><p><%= user.Role %></p>
+	<h4>Số dư:</h4><p><%= user.Balance %></p>
+  </div>
+  
+  <div id="learning" class="tabcontent">
+	<h3>Paris</h3>
+	<p>Paris is the capital of France.</p>
+  </div>
+  
+  <div id="edit" class="tabcontent">
+    <ul class="shadow-button-set">
+      <li><button>Nạp tiền</button></li>
+      <% if(user.Role === 'teacher') { %>
+        <a href="/courses"><li><button>Khóa học của tôi</button></li></a>
+      <% } %>
+      <li><button>Online</button></li>
+      <li><button>Settings</button></li>
+      <li><button>Quit</button></li>
+    </ul>
+</div>
+<style>
+	/* Style the tab */
+.tabs {
+  max-width: 50%;
+  height: 500px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.tabcontent img {
+    float: right;
+    max-width: 100%; /* Giới hạn tối đa chiều rộng là 100% của container cha */
+    height: auto; /* Chiều cao tự động điều chỉnh theo tỷ lệ */
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  opacity: 0.7;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+.tabcontent {
+  animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@use postcss-nested;
+
+.shadow-button-set {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5vmin;
+  
+  & > li {
+    display: inline-flex;
+    background: black;
+    
+    &:is(:hover, :focus-within) > button:not(:active) {
+      --distance: -10px;
+    }
+  }
+  
+  & button {
+    appearance: none;
+    outline: none;
+    font-size: 5vmin;
+    border: 3px solid black;
+    background: white;
+    
+    --distance: 0;
+    transform: translateX(var(--distance)) translateY(var(--distance));
+    
+    @media (prefers-reduced-motion: no-preference) {
+      will-change: transform;
+      transition: transform .2s ease ;
+    }
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  block-size: 100%;
+}
+
+body {
+  min-block-size: 100%;
+  font-family: system-ui, sans-serif;
+  
+  display: grid;
+  place-content: center;
+}
+</style>
+<script>
+	function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+</script>
