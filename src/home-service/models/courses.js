@@ -3,8 +3,8 @@ const db = require('../../../config/db.config');
 
 const Course = {
 
-  findById: (id, callback) => {
-    const query = 'SELECT * FROM users WHERE id = ?';
+  findByKeyWord: (id, callback) => {
+    const query = 'SELECT * FROM courses WHERE Name_course = ?';
     db.query(query, [id], (err, results) => {
       if (err) {
         return callback(err, null);
@@ -14,8 +14,8 @@ const Course = {
   },
 
   findAll: (callback) => {
-    const query = 'SELECT * FROM users WHERE Role = ?';
-    db.query(query, ['teacher'], (err, results) => {
+    const query = 'SELECT * FROM courses WHERE Status = ?';
+    db.query(query, ['Draft'], (err, results) => {
       if (err) {
         return callback(err, null);
       }
@@ -23,16 +23,6 @@ const Course = {
     });
   },
 
-  findOne: (username, callback) => {
-    const query = 'SELECT * FROM users WHERE Username = ?';
-    db.query(query, [username], (err, results) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null, results[0]);
-    });
-  },
-
 }
 
-module.exports = Teacher;
+module.exports = Course;

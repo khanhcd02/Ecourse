@@ -5,5 +5,6 @@ const verifyLogin = require('../../middleware/checkLogin');
 const jwt = require('jsonwebtoken');
 router.get('/', verifyLogin, homeController.home);
 router.get('/teachers', verifyLogin, homeController.teachers);
+router.get('/courses', verifyLogin, homeController.courses);
 
 module.exports = router;
