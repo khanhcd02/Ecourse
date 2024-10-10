@@ -1,29 +1,42 @@
-<form action="/courses/Exam/<%= examId %>" method="POST" id="examForm">
-    <div id="question-list">
-        <div class="question-item">
-            <label for="question">Question:</label>
-            <input type="text" name="questions[0][Question]" required>
-            <label for="A">Option A:</label>
-            <input type="text" name="questions[0][A]" required>
-            <label for="B">Option B:</label>
-            <input type="text" name="questions[0][B]" required>
-            <label for="C">Option C:</label>
-            <input type="text" name="questions[0][C]" required>
-            <label for="D">Option D:</label>
-            <input type="text" name="questions[0][D]" required>
-            <label for="Answer">Correct Answer:</label>
-            <select name="questions[0][Answer]">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-            </select>
+<div class="c">
+    <form action="/courses/Exam/<%= examId %>" method="POST" id="examForm">
+        <div id="question-list">
+            <div class="question-item">
+                <label for="question">Question:</label>
+                <input class="q" type="text" name="questions[0][Question]" required><br>
+                <label for="A">Option A:</label>
+                <input type="text" name="questions[0][A]" required>
+                <label for="B">Option B:</label>
+                <input type="text" name="questions[0][B]" required><br>
+                <label for="C">Option C:</label>
+                <input type="text" name="questions[0][C]" required>
+                <label for="D">Option D:</label>
+                <input type="text" name="questions[0][D]" required><br>
+                <label for="Answer">Correct Answer:</label>
+                <select name="questions[0][Answer]">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
         </div>
-    </div>
-    <button type="button" id="add-question-btn">+ Add Question</button>
-    <button type="submit">Save Exam</button>
-</form>
-
+        <button type="button" id="add-question-btn">+ Add Question</button>
+        <button type="submit">Save Exam</button>
+    </form>
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+        max-width: 50%;
+        margin: auto;
+        margin-top: 50px;
+    }
+    .q {
+        width: 80%;
+    }
+</style>
 <script>
     let questionCount = 1;
     document.getElementById('add-question-btn').addEventListener('click', function() {
@@ -32,15 +45,15 @@
         newQuestion.classList.add('question-item');
         newQuestion.innerHTML = `
             <label for="question">Question:</label>
-            <input type="text" name="questions[${questionCount}][Question]" required>
+            <input class="q" type="text" name="questions[${questionCount}][Question]" required><br>
             <label for="A">Option A:</label>
             <input type="text" name="questions[${questionCount}][A]" required>
             <label for="B">Option B:</label>
-            <input type="text" name="questions[${questionCount}][B]" required>
+            <input type="text" name="questions[${questionCount}][B]" required><br>
             <label for="C">Option C:</label>
             <input type="text" name="questions[${questionCount}][C]" required>
             <label for="D">Option D:</label>
-            <input type="text" name="questions[${questionCount}][D]" required>
+            <input type="text" name="questions[${questionCount}][D]" required><br>
             <label for="Answer">Correct Answer:</label>
             <select name="questions[${questionCount}][Answer]">
                 <option value="A">A</option>

@@ -1,21 +1,140 @@
-<form action="/Exam/<%= exam.Id %>/submitExam" method="POST">
-    <% questions.forEach((question, index) => { %>
-        <div class="form-group">
-            <label><%= question.Question %></label>
-            <div>
-                <input type="radio" name="answers[<%= index %>]" value="A" required> <%= question.A %>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f5eb;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 28px;
+        color: #d97706;
+        margin-bottom: 30px;
+    }
+
+    .question {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d97706;
+        margin-bottom: 15px;
+    }
+
+    .option {
+        position: relative;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        background-color: #f4e4ca;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .option:hover {
+        border-color: #d97706;
+    }
+
+    .option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .option input[type="radio"]:checked + label {
+        background-color: #f4d8a4;
+        border-color: #ffa500;
+    }
+
+    .option input[type="radio"]:checked + label::before {
+        background-color: #ffa500;
+        border-color: #ffa500;
+    }
+
+    .option label {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .option label::before {
+        content: "";
+        width: 24px;
+        height: 24px;
+        border: 2px solid #d97706;
+        border-radius: 50%;
+        margin-right: 10px;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .option input[type="radio"]:checked + label::before {
+        background-color: #ffa500;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20.292 5.708a1 1 0 010 1.414l-11 11a1 1 0 01-1.414 0l-5-5a1 1 0 111.414-1.414l4.293 4.293 10.293-10.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+        background-size: 60%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        background-color: #d97706;
+        color: white;
+        font-size: 18px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #b65b04;
+    }
+</style>
+
+<div class="container">
+    <h1>Exam</h1>
+    <form action="/Exam/<%= exam.Id %>/submitExam" method="POST">
+        <% questions.forEach((question, index) => { %>
+            <div class="form-group">
+                <div class="question"><%= question.Question %></div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="A" id="optionA<%= index %>" required>
+                    <label for="optionA<%= index %>"><%= question.A %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="B" id="optionB<%= index %>" required>
+                    <label for="optionB<%= index %>"><%= question.B %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="C" id="optionC<%= index %>" required>
+                    <label for="optionC<%= index %>"><%= question.C %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="D" id="optionD<%= index %>" required>
+                    <label for="optionD<%= index %>"><%= question.D %></label>
+                </div>
             </div>
-            <div>
-                <input type="radio" name="answers[<%= index %>]" value="B" required> <%= question.B %>
-            </div>
-            <div>
-                <input type="radio" name="answers[<%= index %>]" value="C" required> <%= question.C %>
-            </div>
-            <div>
-                <input type="radio" name="answers[<%= index %>]" value="D" required> <%= question.D %>
-            </div>
-        </div>
-    <% }) %>
-    <input type="hidden" name="answerSheetId" value="<%= answerSheetId %>">
-    <button type="submit" class="btn btn-primary">Submit Exam</button>
-</form>
+        <% }) %>
+        <input type="hidden" name="answerSheetId" value="<%= answerSheetId %>">
+        <input type="hidden" name="Course_id" value="<%= Course_id %>">
+        <input type="hidden" name="Track_exams" value="<%= exam.Ordinal_number %>">
+        <button type="submit" class="btn btn-primary">Submit Exam</button>
+    </form>
+</div>

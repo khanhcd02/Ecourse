@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="payment-info">
+        <div class="success-message">
+            <div class="tick-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="16 8 10 14 8 12"></polyline>
+                </svg>
+            </div>
+            <h1>Nạp tiền thành công!</h1>
+        </div>
+        <p class="mess">Cảm ơn bạn đã nạp tiền!</p>
+
+    </div>
+</div>
+<style>
+    .payment-info {
+        margin: auto;
+        width: 800px;
+        height: 700px;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 200px 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+}
+
+.mess{
+    padding: 10px;
+    margin-top: 120px;
+    text-align: center;
+    left: 0px;
+}
+    .failed-message {
+    text-align: center;
+    margin-top: 50px;
+    }
+
+    .cross-icon {
+        display: inline-block;
+        animation: scaleTick 0.5s ease alternate infinite;
+    }
+    .success-message {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .tick-icon {
+        display: inline-block;
+        animation: scaleTick 0.5s ease alternate infinite;
+    }
+
+    @keyframes scaleTick {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.2);
+        }
+    }
+
+    svg {
+        width: 100px;
+        height: 100px;
+    }
+</style>

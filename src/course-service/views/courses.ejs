@@ -10,20 +10,24 @@
             <% if(courses) { %>
             <div class="row">
                 <% courses.forEach((course) => { %>
-                <div class="col-md-6 col-lg-3 text-center team mb-4">
-                    <div class="team-item rounded overflow-hidden mb-2">
-                        <div class="team-img position-relative">
-                            <img class="img-fluid" src="<%= course.Image ? course.Image : '/users/h1.jpg' %>" alt="course Avatar">
-                            <div class="team-social">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="rounded overflow-hidden mb-2">
+                            <img class="img-fluid" src="<%= course.Image ? course.Image : '/courses/course-1.jpg' %>" alt="">
+                            <div class="bg-secondary p-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <small class="m-0"><i class="fa fa-users text-primary mr-2"></i><%= course.Teacher_id %></small>
+                                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>01h 30m</small>
+                                </div>
+                                <a class="h5" href="/courses/<%= course.Id %>"><%= course.Name_course %></a>
+                                <div class="border-top mt-4 pt-4">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
+                                        <h5 class="m-0"><%= course.Tuition %> VNĐ</h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-secondary p-4">
-                            <h5><a href="/courses/<%= course.Id %>"><%= course.Name_course %></a></h5>
-                            <p class="m-0"><%= course.Teacher_id %></p>
-                            <p class="m-0"><%= course.Tuition %></p>
-                        </div>
                     </div>
-                </div>
                 <% }); %>
             </div>
             <% } %>

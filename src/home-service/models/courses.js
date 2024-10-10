@@ -13,6 +13,16 @@ const Course = {
     });
   },
 
+  findById: (id, callback) => {
+    const query = 'SELECT * FROM courses WHERE Id = ?';
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results[0]);
+    });
+  },
+
   findAll: (callback) => {
     const query = 'SELECT * FROM courses WHERE Status = ?';
     db.query(query, ['Draft'], (err, results) => {

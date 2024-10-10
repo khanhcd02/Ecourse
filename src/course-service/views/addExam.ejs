@@ -1,14 +1,26 @@
-<form action="/courses/addExam/<%= courseId %>" method="POST">
-    <input type="hidden" name="Course_id" value="<%= courseId %>">
-    <div class="form-group">
-        <label for="examTitle">Exam Title</label>
-        <input type="text" class="form-control" id="examTitle" name="Title" required>
-    </div>
+<div class="c">
+    <form action="/courses/addExam/<%= courseId %>" method="POST">
+        <input type="hidden" name="Course_id" value="<%= courseId %>">
+        <div class="form-group">
+            <label for="examTitle">Exam Title</label>
+            <input type="text" class="form-control" id="examTitle" name="Title" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="examTime">Exam Time (minutes)</label>
+            <input type="number" class="form-control" id="examTime" name="Exam_time">
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Add Exam</button>
+    </form>
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+        max-width: 50%;
+        margin: auto;
+        margin-top: 50px;
+    }
 
-    <div class="form-group">
-        <label for="examTime">Exam Time (minutes)</label>
-        <input type="number" class="form-control" id="examTime" name="Exam_time">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add Exam</button>
-</form>
+ </style>

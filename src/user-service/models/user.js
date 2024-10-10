@@ -13,13 +13,13 @@ const User = {
     });
   },
 
-  findOne: (username, callback) => {
-    const query = 'SELECT * FROM users WHERE Username = ?';
-    db.query(query, [username], (err, results) => {
+  getProgressByStudentId: (id, callback) => {
+    const query = 'SELECT e.*, c.Name_course FROM enrollments e JOIN courses c ON e.Course_id = c.Id WHERE Student_id = ?';
+    db.query(query, [id], (err, results) => {
       if (err) {
         return callback(err, null);
       }
-      callback(null, results[0]);
+      callback(null, results);
     });
   },
 
@@ -33,6 +33,56 @@ const User = {
     });
   },
 
+  transaction: (transaction, callback) => {
+    const query = 'INSERT INTO transactions(User_id,Amount,Transaction_type,Transaction_date, Note) VALUES (?, ?, ?, ?, ?)';
+      db.query(query, [transaction.User_id, transaction.Amount, transaction.Transaction_type, transaction.Transaction_date, transaction.Note], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0] );
+      });
+    },
+
+  updateBalance: (trans, callback) => {
+    const query = 'UPDATE users SET Balance = Balance + ? WHERE Id = ?';
+      db.query(query, [trans.amount, trans.id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+    },
+    
+
+  joinCourse: (join, callback) => {
+    const query = 'INSERT INTO enrollments(Student_id,Course_id,Status) VALUES (?, ?, ?)';
+      db.query(query, [join.Student_id,join.Course_id,'registed'], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+  },
+
+  pay: (trans, callback) => {
+    const query = 'UPDATE users SET Balance = Balance - ? WHERE Id = ?';
+      db.query(query, [trans.Amount, trans.Student_id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+    },
+
+  updateProgressLessons: (progress, callback) => {
+    const query = 'UPDATE track_progress SET Track_lessons = ? WHERE Student_id = ? AND Course_id = ?';
+      db.query(query, [progress.Track_lessons, progress.Student_id, progress.Course_id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+    },
 }
 
 module.exports = User;

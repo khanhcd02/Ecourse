@@ -1,0 +1,31 @@
+<div style="background-color: white; width: 50%;margin: auto;">
+    <%= course.Name_course %>
+    <div style="display: flex; gap: 10px;">
+        <div style="display: flex; flex-direction: column;">
+            <label>Teacher</label>
+            <a href=""><%= course.Teacher_id %></a>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+            <label>Categories</label>
+            <a href=""><%= course.Category_id %></a>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+            <label>Tuition</label>
+            <span><%= course.Tuition %></span>
+        </div>
+        <form action="/user/join" method="post">
+            <% if (user) { %>
+                <input type="hidden" value="<%= course.Id %>" name="course_id">
+                <input type="hidden" value="<%= course.Tuition %>" name="amount">
+                <input type="submit" value="Đăng kí khóa học" ></input>
+            <% } else { %>
+                <a href="/auth/login">LOGIN TO JOIN</a>
+            <% } %>
+        </form>
+    </div>
+    <img class="img-fluid" src="<%= course.Image%>" alt="course Avatar">
+    <div>
+        <h4>DESCRIPTION</h4>
+        <P><%= course.Short_describe %></P>
+    </div>
+</div>

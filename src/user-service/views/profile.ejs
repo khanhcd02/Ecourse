@@ -9,7 +9,7 @@
   <!-- Tab content -->
   <div id="personal" class="tabcontent">
 	<h3><%= user.Fullname %></h3>
-	<img style="max-width: 300px;max-height: 300px;width: 40%;" src="<%= user.QR_code %>" alt="">
+	<img style="max-width: 200px;max-height: 200px;width: 40%;border-radius: 50%;" src="<%= user.Avatar ? user.Avatar : '/users/h1.jpg' %>" alt="">
 	<h4>Email:</h4><p><%= user.Email %></p>
 	<h4>SDT:</h4><p><%= user.Phone_number %></p>
 	<h4>Vai trò:</h4><p><%= user.Role %></p>
@@ -17,15 +17,36 @@
   </div>
   
   <div id="learning" class="tabcontent">
-	<h3>Paris</h3>
-	<p>Paris is the capital of France.</p>
+	<h3>My courses</h3>
+	<table>
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Track Lessons</th>
+        <th>Track Exams</th>
+        <th>Enrollment Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% progress.forEach(i => { %>
+        <tr>
+          <td><%= i.Name_course %></td>
+          <td><%= i.Track_lessons %></td>
+          <td><%= i.Track_exams %></td>
+          <td><%= new Date(i.Enrollment_date).toLocaleString('vi-VN') %></td>
+          <td><%= i.Status %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
   </div>
   
   <div id="edit" class="tabcontent">
     <ul class="shadow-button-set">
-      <li><button>Nạp tiền</button></li>
+      <li><button><a style="text-decoration: none;color: #000;" href="/user/qrcode">Nạp tiền</a></button></li>
       <% if(user.Role === 'teacher') { %>
-        <a href="/courses"><li><button>Khóa học của tôi</button></li></a>
+        <li><button><a style="text-decoration: none;color: #000;" href="/courses">Khóa học của tôi</a></button></li>
       <% } %>
       <li><button>Online</button></li>
       <li><button>Settings</button></li>
@@ -80,6 +101,7 @@
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .tabcontent {
   animation: fadeEffect 1s; /* Fading effect takes 1 second */
@@ -142,6 +164,22 @@ body {
   display: grid;
   place-content: center;
 }
+table {
+  width: 100%; /* Chiều rộng bảng bằng 100% */
+}
+
+th, td {
+  padding: 10px; /* Khoảng cách bên trong ô */
+}
+
+/* Điều chỉnh kích thước cột */
+th:nth-child(1), td:nth-child(1) {
+  width: 40%;
+}
+
+
+
+/* ... các cột còn lại */
 </style>
 <script>
 	function openTab(evt, tabName) {
