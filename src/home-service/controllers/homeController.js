@@ -101,3 +101,17 @@ exports.courses = (req, res) => {
     }
   });
 };
+
+exports.courseDetail = (req, res) => {  
+  Course.findById(req.params.courseId, (err, results) => {
+    if (err) {
+        console.error('Error fetching courses:', err);
+    } else {
+        res.render('../../layout', { 
+          title: 'courseDetail', 
+          user: req.user,
+          body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courseDetail.ejs'), 'utf8'), { user: req.user, course: results })
+        });
+    }
+  });
+};

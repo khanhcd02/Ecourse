@@ -1,16 +1,15 @@
-<h1>Lessons </h1>
-<table class="table">
+<div class="c">
+    <h1>Lessons </h1>
+<table class="table" id="lesson-list">
     <thead>
         <tr>
-            <th>Ordinal Number</th>
             <th>Title</th>
             <th>Content</th>
         </tr>
     </thead>
     <tbody>
         <% lessons.forEach(lesson => { %>
-            <tr>
-                <td><%= lesson.Ordinal_number %></td>
+            <tr data-id="<%= lesson.Id %>">
                 <td><%= lesson.Title %></td>
                 <td><%= lesson.Content %></td>
             </tr>
@@ -20,7 +19,7 @@
 <a href="/courses/addLesson/<%= courseId %>" class="btn btn-primary">Add Lesson</a>
 
 <h1>Exams </h1>
-<table class="table">
+<table class="table" id="exam-list">
     <thead>
         <tr>
             <th>Title</th>
@@ -29,13 +28,81 @@
     </thead>
     <tbody>
         <% exams.forEach(exam => { %>
-            <tr>
+            <tr data-id="<%= exam.Id %>">
                 <td><%= exam.Title %></td>
                 <td><%= exam.Exam_time %></td>
                 <td><a href="/courses/Exam/<%= exam.Id %>">Thêm câu hỏi</a></td>
-                <td><a href="/Exam/<%= exam.Id %>/takeExam">Demo</a></td>
+                <td><a href="/Exam/<%= courseId %>/takeExam/<%= exam.Id %>">Demo</a></td>
             </tr>
         <% }) %>
     </tbody>
 </table>
 <a href="/courses/addExam/<%= courseId %>" class="btn btn-primary">Add Exam</a>
+
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+    }
+    .c th, td {
+        color: blue;
+    }
+ </style>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+<script>
+    //Lessons
+    var el = document.querySelector('#lesson-list tbody');
+    var sortable = Sortable.create(el, {
+      onEnd: function (evt) {
+        var orderedLessons = [];
+        document.querySelectorAll('#lesson-list tbody tr').forEach(function (item, index) {
+          orderedLessons.push({ id: item.getAttribute('data-id'), newPosition: index + 1 });
+        });
+        console.log(orderedLessons)
+        // Gửi danh sách mới lên server qua AJAX
+        fetch('/courses/update-lessons-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ lessons: orderedLessons }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+    });
+    
+    //Exams
+    var examEl = document.querySelector('#exam-list tbody');
+    var examSortable = Sortable.create(examEl, {
+      onEnd: function (evt) {
+        var orderedExams = [];
+        document.querySelectorAll('#exam-list tbody tr').forEach(function (item, index) {
+            orderedExams.push({ id: item.getAttribute('data-id'), newPosition: index + 1 });
+        });
+        console.log(orderedExams)
+        // Gửi danh sách mới lên server qua AJAX
+        fetch('/courses/update-exams-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ exams: orderedExams }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+    });
+  </script>

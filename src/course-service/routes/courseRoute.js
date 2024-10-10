@@ -9,7 +9,7 @@ const multer = require('multer'); // Nếu bạn sử dụng multer để xử l
 // Cấu hình multer để xử lý file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../../static/img/courses/'); // Đường dẫn đến thư mục nơi bạn muốn lưu file
+        cb(null, './static/img/courses/'); // Đường dẫn đến thư mục nơi bạn muốn lưu file
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname)); // Đổi tên file
@@ -27,5 +27,6 @@ router.get('/addExam/:courseId', verifyTeacher, courseController.addExam);
 router.post('/addExam/:courseId', verifyTeacher, courseController.addExam);
 router.get('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
 router.post('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
-
+router.post('/update-lessons-order', verifyTeacher, courseController.updateLessonsOrder);
+router.post('/update-exams-order', verifyTeacher, courseController.updateExamsOrder);
 module.exports = router;

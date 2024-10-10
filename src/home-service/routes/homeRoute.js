@@ -6,5 +6,6 @@ const jwt = require('jsonwebtoken');
 router.get('/', verifyLogin, homeController.home);
 router.get('/teachers', verifyLogin, homeController.teachers);
 router.get('/courses', verifyLogin, homeController.courses);
+router.get('/courses/:courseId', verifyLogin, homeController.courseDetail);
 
 module.exports = router;

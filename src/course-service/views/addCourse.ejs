@@ -1,11 +1,12 @@
-<form action="/courses/addCourse" method="POST" enctype="multipart/form-data">
+<div class="addCourse">
+  <form action="/courses/addCourse" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-      <label for="Name_course">Course Name</label>
+      <label for="Name_course">Tên khóa học</label>
       <input type="text" class="form-control" id="Name_course" name="Name_course" required>
     </div>
     
     <div class="form-group">
-      <label for="category">Category</label>
+      <label for="category">Thể loại</label>
       <select class="form-control" id="category" name="Category_id">
         <% categories.forEach((category) => { %>
           <option value="<%= category.Id %>"><%= category.Category_name %></option>
@@ -14,20 +15,46 @@
     </div>
   
     <div class="form-group">
-      <label for="tuition">Tuition</label>
+      <label for="tuition">Học phí</label>
       <input type="number" class="form-control" id="Tuition" name="Tuition">
     </div>
   
     <div class="form-group">
-      <label for="duration">Duration (hours)</label>
+      <label for="duration">Thời lượng (hours)</label>
       <input type="number" class="form-control" id="duration" name="Duration">
     </div>
   
     <div class="form-group">
-      <label for="image">Course Image</label>
+      <label for="describe">Mô tả khóa học</label>
+      <input type="text" class="form-control" id="describe" name="Describe" required>
+    </div>
+
+    <div class="form-group">
+      <label for="image">Ảnh khóa học</label>
       <input type="file" class="form-control-file" id="image" name="Image">
     </div>
   
-    <button type="submit" class="btn btn-primary">Add Course</button>
+    <button type="submit" class="btn btn-primary">Tạo mới</button>
   </form>
-  
+</div>
+  <style>
+    .addCourse {
+      margin: auto;
+      max-width: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      margin-top: 50px;
+    }
+
+    .addCourse input, select{
+      margin: auto;
+      max-width: 50%;
+    }
+    .addCourse label {
+      color: rgb(40, 4, 132);
+      margin-left: 20px;
+    }
+    .addCourse button {
+      margin-left: 300px;
+      margin-bottom: 10px;
+    }
+  </style>

@@ -4,9 +4,9 @@ const userRoute = require('./routes/userRoute');
 const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser()); 
-
+app.use(express.urlencoded({ extended: true }));
 app.use('/user', userRoute);
 app.use('/assets', express.static('assets'));
 app.set('view engine', 'ejs');

@@ -4,8 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:api-gateway": "nodemon ./server.js",
+    "start:auth-service": "cd ./src/auth-service && node app.js",
+    "start:home-service": "node ./src/home-service/app.js",
+    "start:user-service": "node ./src/user-service/app.js",
+    "start:course-service": "node ./src/course-service/app.js",
+    "start:exam-service": "node ./src/exam-service/app.js",
+    "start:all": "concurrently \"npm run start:api-gateway\" \"npm run start:auth-service\" \"npm run start:home-service\" \"npm run start:user-service\" \"npm run start:course-service\" \"npm run start:exam-service\"",
+    "stop": "echo 'Stopping services not implemented'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -25,5 +31,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
 }

@@ -11,20 +11,13 @@ exports.courses = (req, res) => {
     Course.findOfMySelf(req.user.userId,(err, results) => {
         if (err) {
             console.error('Error fetching courses:', err);
-            let courses =null;
-            res.render('../../layout', { 
-              title: 'courses', 
-              user: req.user,
-              body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courses.ejs'), 'utf8'), { courses: courses })
-            });
-        } else {
-            let courses = results
-            res.render('../../layout', { 
-              title: 'courses', 
-              user: req.user,
-              body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courses.ejs'), 'utf8'), { courses: courses })
-            });
-        }
+            results = null;
+        } 
+        res.render('../../layout', { 
+            title: 'courses', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courses.ejs'), 'utf8'), { courses: results })
+        });
       });
   }else{
     res.redirect('/home/');
@@ -38,12 +31,16 @@ exports.addCourses = (req, res) => {
                 console.error('Error fetching Category:', err);
                 res.redirect('/courses');
             } else {
-                res.render('../views/addCourse.ejs',{categories: results})
+                res.render('../../layout', { 
+                    title: 'add courses', 
+                    user: req.user,
+                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addCourse.ejs'), 'utf8'), { categories: results })
+                });
             }
         })
     }else if (req.method === 'POST') {
-        const { Name_course, Category_id, Tuition, Duration } = req.body;
-        const Image = req.file ? req.file.filename : '/courses/course-1.jpg';
+        const { Name_course, Category_id, Tuition, Duration, Describe } = req.body;
+        const Image = req.file ? req.file.filename : 'course-1.jpg';
         const Teacher_id = req.user.userId;
         const newCourse = {
             Name_course,
@@ -51,6 +48,7 @@ exports.addCourses = (req, res) => {
             Teacher_id,
             Tuition,
             Duration,
+            Describe,
             Image,
         }
         Course.create(newCourse, (err, result) => {
@@ -91,13 +89,16 @@ exports.lessons = (req, res) => {
 
 exports.addLesson = (req, res) => { 
     if (req.method === 'GET') {
-        res.render('../views/addLesson.ejs',{courseId: req.params.courseId})
+        res.render('../../layout', { 
+            title: 'add lesson', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addLesson.ejs'), 'utf8'), { courseId: req.params.courseId })
+        });
     }else if (req.method === 'POST') {
-        const { Title, Course_id, Ordinal_number, Content } = req.body;
+        const { Title, Course_id, Content } = req.body;
         const newLesson = {
             Title, 
             Course_id, 
-            Ordinal_number, 
             Content
         }
         Course.addNewLesson(newLesson, (err, result) => {
@@ -105,14 +106,18 @@ exports.addLesson = (req, res) => {
                 console.error('Error adding course:', err);
                 return res.status(500).send('Server error');
             }
-            res.redirect('/courses');
+            res.redirect(`/courses/${Course_id}`);
         });
     }
 };
 
 exports.addExam = (req, res) => { 
     if (req.method === 'GET') {
-        res.render('../views/addExam.ejs',{courseId: req.params.courseId})
+        res.render('../../layout', { 
+            title: 'add exam', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addExam.ejs'), 'utf8'), { courseId: req.params.courseId })
+        });
     }else if (req.method === 'POST') {
         const { Title, Course_id, Exam_time } = req.body;
         const newExam = {
@@ -125,14 +130,18 @@ exports.addExam = (req, res) => {
                 console.error('Error adding course:', err);
                 return res.status(500).send('Server error');
             }
-            res.redirect('/courses');
+            res.redirect(`/courses/${Course_id}`);
         });
     }
 };
 
 exports.addExamDetail = (req, res) => {
     if (req.method === 'GET') {
-        res.render('../views/addQuestion.ejs',{examId: req.params.examId})
+        res.render('../../layout', { 
+            title: 'add question', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addQuestion.ejs'), 'utf8'), { examId: req.params.examId })
+        });
     }else if (req.method === 'POST') {
         const { questions } = req.body;
         const examId = req.params.examId; // Lấy ID đề thi từ form hoặc URL
@@ -164,4 +173,26 @@ exports.addExamDetail = (req, res) => {
         res.redirect('/courses');
     }
     
+};
+
+exports.updateLessonsOrder = (req, res) => { 
+    const lessons = req.body.lessons;
+    Course.updateLessonsOrder(lessons, (err, result) => {
+        if (err) {
+            console.error('Error:', err);
+            return res.status(500).send('Server error');
+        }
+        return res.status(200).json({ message: 'Lessons order updated successfully', data: result });
+    });
+};
+
+exports.updateExamsOrder = (req, res) => { 
+    const exams = req.body.exams;
+    Course.updateExamsOrder(exams, (err, result) => {
+        if (err) {
+            console.error('Error:', err);
+            return res.status(500).send('Server error');
+        }
+        return res.status(200).json({ message: 'Exams order updated successfully', data: result });
+    });
 };

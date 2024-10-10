@@ -8,6 +8,7 @@ const AnswerSheet = require('../models/answer')
 
 exports.takeExam = (req, res) => {
     const examId = req.params.examId;
+    const courseId = req.params.courseId;
     const studentId = req.userId;
     
     // Truy vấn lấy thông tin bài thi và câu hỏi từ database
@@ -26,7 +27,7 @@ exports.takeExam = (req, res) => {
                 }
     
                 // Render trang làm bài thi
-                res.render('takeExam', { exam, questions, answerSheetId });
+                res.render('takeExam', { exam, questions, answerSheetId, Course_id: courseId });
             });
         });
     });
@@ -73,7 +74,21 @@ exports.submitExam = (req, res) => {
                 if (err) {
                     return res.status(500).send('Error updating score');
                 }
-
+                if (score > 70) {
+                    const progressExam = {
+                        Student_id: req.userId,
+                        Course_id: req.body.Course_id,
+                        Track_exams: req.body.Track_exams,
+                    }
+                    Exam.updateProgressExams(progressExam, (err, results) => {
+                        if (err) {
+                            console.error('Error fetching progressExam:', err);
+                            return res.status(500).send('Error fetching progressExam');
+                        } else {
+                            console.log("cập nhật tiến trình bài tập thành công!")
+                        }
+                      });
+                }
                 // Gửi kết quả sau khi nộp bài
                 res.render('examResult', { score, correctCount, totalQuestions });
             });
@@ -81,3 +96,19 @@ exports.submitExam = (req, res) => {
         
     });
 };
+
+exports.updateProgressExams = (req, res) => {
+    const progressExam = {
+      Student_id: req.userId,
+      Course_id: req.body.Course_id,
+      Track_exams: req.body.Track_exams,
+    }
+    User.updateProgressExams(progressExam, (err, results) => {
+      if (err) {
+          console.error('Error fetching progressExam:', err);
+          return res.status(500).send('Error fetching progressExam');
+      } else {
+          console.log("cập nhật tiến trình bài tập thành công!")
+      }
+    });
+  }

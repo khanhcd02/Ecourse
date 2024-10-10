@@ -237,7 +237,8 @@ function(accessToken, refreshToken, profile, done) {
         userId: user.Id,
         Fullname: user.Fullname,
         Avatar: user.Avatar,
-        Role: user.Role
+        Role: user.Role,
+        Balance: user.Balance
       }
       const tokens = generateToken(userData)
       return done(null, { user, tokens });
@@ -259,7 +260,8 @@ function(accessToken, refreshToken, profile, done) {
             userId: user.Id,
             Fullname: user.fullname,
             Avatar: user.avatar,
-            Role: user.role
+            Role: user.role,
+            Balance: user.balance
           }
           const tokens = generateToken(userData)
         return done(null, { user, tokens });

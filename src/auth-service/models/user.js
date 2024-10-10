@@ -25,7 +25,7 @@ const User = {
 
   create: (user, callback) => {
 
-    qrcode = 'https://img.vietqr.io/image/TPB-06254144101-compact.png?amount=10000&addInfo=nt%20'+user.username+'&accountName=Pham%20Dang%20Khanh'
+    qrcode = 'https://img.vietqr.io/image/BIDV-2153265335-compact.png?amount=10000&addInfo=nt%20'+user.username+'&accountName=Pham%20Dang%20Khanh'
     const query = 'INSERT INTO users (Fullname, Username, Password,Avatar, Email, Phone_number,Role, QR_code, Balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     db.query(query, [user.fullname, user.username, user.password, user.avatar, user.email, user.phone_number, 'Student', qrcode, 0], (err, results) => {
       if (err) {

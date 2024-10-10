@@ -8,12 +8,12 @@ const verifyLogin = (req,res,next) => {
         req.user = null;
     }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-          req.user = null;
-        }
-        req.user = user;
-      });
-      return next();
+      if (err) {
+        req.user = null;
+      }
+      req.user = user;
+    });
+    return next();
     // try {
     //     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     //     req.userData = decoded

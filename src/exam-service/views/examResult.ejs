@@ -2,4 +2,8 @@
     <h2>Kết quả bài thi</h2>
     <p>Số câu trả lời đúng: <%= correctCount %> / <%= totalQuestions %></p>
     <p>Điểm: <%= score %> %</p>
+    <% if (score < 70 ) { %>
+        <p> Đạt 70 điểm để mở khóa bài tập tiếp theo!</p>
+        <img src="/vdkn.jpg" height="300px" width="400px" alt="">
+    <% } %>
 </div>

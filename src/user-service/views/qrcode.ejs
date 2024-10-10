@@ -1,0 +1,71 @@
+
+    <br>
+    <!-- Tab content -->
+    <div class="qrcontent">
+        <div style="max-width: 300px;max-height: 300px;width: 40%;top: 20px;right: 20px;position: absolute;">
+            <h4>Người nhận:</h4><p>PHẠM ĐĂNG KHÁNH</p>
+            <h4>STK:</h4><p>2153265335</p>
+            <h4>Nội dung chuyển khoản:</h4><p id="paidContent">nt <%= user.Username %></p>
+            <span style="font-style: italic;font-size: small;color: red;">Lưu ý: kiểm tra đúng nội dung chuyển khoản!</span>
+        </div>
+      <img style="max-width: 300px;max-height: 300px;width: 40%;bottom: 0px;right: 20px;position: absolute;" src="<%= user.QR_code %>" alt="">
+    </div>
+    
+  <style>
+    .qrcontent {
+        margin: auto;
+        width: 50%;
+        height: 600px;
+        background-image: url('/web/5yjai9.jpg');
+        background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center   
+ center;
+ position: relative;
+    }
+ 
+  </style>
+
+<script>
+    const paidContentElement = document.getElementById('paidContent');
+    const paidContent = paidContentElement.textContent.trim();
+    const currentTime = Date.now()
+async function checkPaid() {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxwAbgXeQValJm3dB9oMz8O9jUaUutDGq-9VLT_XRIdA2e59t5oXXOgEXnGaMh2Jc80iA/exec");
+    const data = await response.json()
+    const lastPaid = data.data[data.data.length - 1]
+    const lastContent = lastPaid["Mô tả"]
+    const lastMoney = lastPaid["Giá trị"]
+    const targetTime = new Date(lastPaid['Ngày diễn ra']);
+    if (currentTime < targetTime.getTime() && lastContent.includes(paidContent)) {
+        console.log(`Đã nạp thành công ${lastMoney} VNĐ`)
+        const paymentData = {
+                value: lastMoney,
+                date: lastPaid['Ngày diễn ra'],
+                content: paidContent
+            };
+
+        const saveResponse = await fetch("/user/qrcode", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paymentData)
+        });
+        if (saveResponse.ok) {
+            console.log("Payment data saved successfully");
+
+            // Chuyển hướng sau khi lưu thành công
+            window.location.href = "/user/success-page";
+        } else {
+            console.error("Failed to save payment data");
+        }
+    }else{
+        console.log("Waiting...")
+    }
+    
+}
+setInterval(() => {
+    checkPaid()
+},5000)
+</script>
