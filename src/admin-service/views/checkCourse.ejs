@@ -1,0 +1,56 @@
+<div class="c">
+    <h1>Lessons </h1>
+<table class="table" id="lesson-list">
+    <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% lessons.forEach(lesson => { %>
+            <tr>
+                <td><a href="#"><%= lesson.Title %></a></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<h1>Exams </h1>
+<table class="table" id="exam-list">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Exam time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% exams.forEach(exam => { %>
+            <tr>
+                <td><%= exam.Title %></td>
+                <td><%= exam.Exam_time %></td>
+                <td>
+                    <a href="/admin/checkExam/<%= exam.Id %>">Xem</a>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+    }
+    .c th, td {
+        color: blue;
+    }
+    input[type="submit"] {
+        background-color: transparent;
+    border: none;
+    color: blue;
+}
+.c tr a {
+    text-decoration: none;
+}
+ </style>

@@ -13,6 +13,16 @@ const Course = {
     });
   },
 
+  reqCourse: (Course_id, callback) => {
+    const query = 'UPDATE courses SET Status = ? WHERE Id = ?';
+    db.query(query, ['Pending', Course_id], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
+  },
+
   findLesson: (course_id, callback) => {
     const query = 'SELECT * FROM lessons WHERE Course_id = ?';
     db.query(query, [course_id], (err, results) => {

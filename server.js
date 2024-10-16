@@ -8,7 +8,8 @@ const authService = 'http://localhost:3001';
 const homeService = 'http://localhost:3002';
 const userService = 'http://localhost:3003';
 const courseService = 'http://localhost:3004';
-const examseService = 'http://localhost:3005';
+const examService = 'http://localhost:3005';
+const adminService = 'http://localhost:3006';
 
 app.use(express.static(path.join(__dirname, '/static/css')));
 app.use(express.static(path.join(__dirname, '/static/img')));
@@ -37,7 +38,11 @@ app.all('/courses/*', (req, res) => {
 });
 
 app.all('/Exam/*', (req, res) => {
-  apiProxy.web(req, res, { target: examseService }, handleError);
+  apiProxy.web(req, res, { target: examService }, handleError);
+});
+
+app.all('/admin/*', (req, res) => {
+  apiProxy.web(req, res, { target: adminService }, handleError);
 });
 
 function handleError(err, req, res) {

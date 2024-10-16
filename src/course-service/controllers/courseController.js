@@ -196,3 +196,14 @@ exports.updateExamsOrder = (req, res) => {
         return res.status(200).json({ message: 'Exams order updated successfully', data: result });
     });
 };
+
+exports.reqCourse = (req, res) => { 
+    const Course_id = req.body.Course_id;
+    Course.reqCourse(Course_id, (err, result) => {
+        if (err) {
+            console.error('Error:', err);
+            return res.status(500).send('Server error');
+        }
+        res.redirect('/courses')
+    });
+};

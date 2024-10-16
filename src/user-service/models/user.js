@@ -23,6 +23,8 @@ const User = {
     });
   },
 
+  
+
   update: (user, callback) => {
   const query = 'UPDATE users SET Fullname = ?, Email = ?, Phone_number = ? WHERE Id = ? VALUES (?, ?, ?, ?, ?)';
     db.query(query, [user.fullname, user.email, user.phone_number, user.id], (err, results) => {
@@ -75,8 +77,48 @@ const User = {
     },
 
   updateProgressLessons: (progress, callback) => {
-    const query = 'UPDATE track_progress SET Track_lessons = ? WHERE Student_id = ? AND Course_id = ?';
-      db.query(query, [progress.Track_lessons, progress.Student_id, progress.Course_id], (err, results) => {
+    const query = 'UPDATE enrollments SET Track_lessons = ? WHERE Student_id = ? AND Course_id = ? AND Status = ?';
+      db.query(query, [progress.Track_lessons, progress.Student_id, progress.Course_id, 'registed'], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+    },
+
+    findLessons: (course_id, callback) => {
+      const query = 'SELECT * FROM lessons WHERE Course_id = ? ORDER BY (Ordinal_number) ASC';
+      db.query(query, [course_id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results);
+      });
+    },
+
+    findLessonByOrdinal: (lesson, callback) => {
+      const query = 'SELECT * FROM lessons WHERE Course_id = ? AND Ordinal_number = ?';
+      db.query(query, [lesson.Course_id, lesson.Ordinal_number], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results[0]);
+      });
+    },
+    
+    findExams: (course_id, callback) => {
+      const query = 'SELECT * FROM exams WHERE Course_id = ?';
+      db.query(query, [course_id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results);
+      });
+    },
+
+    checkCourseOfStudent: (check, callback) => {
+      const query = 'SELECT * FROM enrollments WHERE Student_id = ? AND Course_id = ? AND (Status = ? OR Status = ?)';
+      db.query(query, [check.Student_id, check.Course_id, 'registed', 'completed'], (err, results) => {
         if (err) {
           return callback(err, null);
         }

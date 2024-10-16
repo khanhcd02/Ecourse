@@ -1,0 +1,111 @@
+<div class="c">
+    <table>
+        <thead>
+          <tr>
+            <th>Chứng chỉ</th>
+            <th>Chuyên môn</th>
+            <th>Trạng thái</th>
+            <th>Thời gian tạo</th>
+            <th>Ghi chú</th>
+            <th>Xử lý</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% requests.forEach(i => { %>
+            <tr>
+              <td><%= i.Certification %></td>
+              <td><%= i.Expertise %></td>
+              <td><%= i.Request_status %></td>
+              <td><%= i.Created_at %></td>
+              <td><%= i.Note %></td>
+              <td><form action="/admin/resolveReqTeacher" method="post">
+                <input type="hidden" value="<%= i.Id %>" name="Req_id">
+                <input type="hidden" value="<%= i.User_id %>" name="User_id">
+                <button type="submit" name="action" value="approve">Chấp nhận</button>
+                <button type="submit" name="action" value="reject">Từ chối</button>
+              </form></td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+    
+</div>
+<div id="popupForm" class="popup-form">
+  <div class="form-container">
+    <span class="close-btn" id="closeFormBtn">&times;</span>
+    
+  </div>
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        max-width: 100%;
+        min-height: 400px;
+        margin: 50px auto;
+    }
+    table {
+        width: 100%; 
+    }
+
+    th, td {
+        padding: 10px; 
+    }
+    .btnReq {
+        display: block; 
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
+/* Ẩn form ban đầu */
+#popupForm {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Hiệu ứng nền mờ */
+  z-index: 999; /* Nổi lên trên */
+}
+
+.form-container {
+  background-color: white;
+  padding: 20px;
+  margin: 15% auto;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+</style>
+<!-- <script>
+    const openFormBtn = document.getElementById('openFormBtn');
+const closeFormBtn = document.getElementById('closeFormBtn');
+const popupForm = document.getElementById('popupForm');
+
+// Mở form khi click vào nút
+openFormBtn.onclick = function() {
+  popupForm.style.display = 'block';
+}
+
+// Đóng form khi click vào nút đóng
+closeFormBtn.onclick = function() {
+  popupForm.style.display = 'none';
+}
+
+// Đóng form khi click ra ngoài form
+window.onclick = function(event) {
+  if (event.target === popupForm) {
+    popupForm.style.display = 'none';
+  }
+}
+
+</script> -->

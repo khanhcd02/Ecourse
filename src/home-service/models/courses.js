@@ -33,6 +33,16 @@ const Course = {
     });
   },
 
+  checkCourseOfStudent: (check, callback) => {
+    const query = 'SELECT * FROM enrollments WHERE Student_id = ? AND Course_id = ? AND (Status = ? OR Status = ?)';
+    db.query(query, [check.Student_id, check.Course_id, 'registed', 'completed'], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results[0]);
+    });
+  },
+
 }
 
 module.exports = Course;

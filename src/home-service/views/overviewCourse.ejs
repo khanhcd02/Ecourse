@@ -15,9 +15,14 @@
         </div>
         <form action="/user/join" method="post">
             <% if (user) { %>
-                <input type="hidden" value="<%= course.Id %>" name="course_id">
-                <input type="hidden" value="<%= course.Tuition %>" name="amount">
-                <input type="submit" value="Đăng kí khóa học" ></input>
+                <% if (check) { %>
+                    <a href="/user/learning/<%= course.Id %>">Learning</a>
+                <% } else { %>
+                    <input type="hidden" value="<%= course.Id %>" name="course_id">
+                    <input type="hidden" value="<%= course.Tuition %>" name="amount">
+                    <input type="hidden" value="<%= course.Teacher_id %>" name="teacher_id">
+                    <input type="submit" value="Đăng kí khóa học" ></input>
+                <% } %>
             <% } else { %>
                 <a href="/auth/login">LOGIN TO JOIN</a>
             <% } %>

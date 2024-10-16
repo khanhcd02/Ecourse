@@ -1,0 +1,111 @@
+
+<div class="c">
+    <input type="hidden" value="<%= course_id %>" id="course_id">
+    <input type="hidden" value="<%= track_lessons %>" id="track_lessons">
+    <input type="hidden" value="<%= lesson.Ordinal_number %>" id="ordinal_number">
+    <div id="content" style="display: none;"><%- lesson.Content %></div>
+
+    <div id="getContent"></div>
+</div>
+<div>
+    <% if (lesson.Ordinal_number - 1 > 0) { %>
+        <form action="/user/learning/lesson" method="post">
+            <input type="hidden" value="<%= course_id %>" name="course_id">
+            <input type="hidden" value="<%= lesson.Ordinal_number - 1 %>" name="ordinal_number">
+            <input type="hidden" value="<%= max_ordinal %>" name="max_ordinal">
+            <input type="hidden" value="<%= track_lessons %>" name="track_lessons" id="track_lessons">
+            <input type="submit" value="Bài học trước">
+        </form>
+    <% } %>
+    <% if (lesson.Ordinal_number < max_ordinal ) { %>
+        <form action="/user/learning/lesson" method="post">
+            <input type="hidden" value="<%= course_id %>" name="course_id">
+            <input type="hidden" value="<%= lesson.Ordinal_number + 1 %>" name="ordinal_number">
+            <input type="hidden" value="<%= max_ordinal %>" name="max_ordinal">
+            <input type="hidden" value="<%= track_lessons %>" name="track_lessons" id="track_lessons">
+            <input class="lesson-button" data-track-lessons="<%= track_lessons %>" data-next-lesson-ordinal="<%= lesson.Ordinal_number + 1 %>" type="submit" value="Bài học sau">
+        </form>
+    <% } %>
+</div>
+<script>
+    var longText = document.getElementById('content').innerHTML;
+    document.getElementById('getContent').innerHTML = longText;
+    // Sử dụng JavaScript để xử lý sự kiện nhấn nút
+    document.querySelectorAll('.lesson-button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Lấy giá trị từ các thuộc tính `data-*`
+            var trackLessons = Number(this.getAttribute('data-track-lessons'));
+            var nextLessonOrdinal = Number(this.getAttribute('data-next-lesson-ordinal'));
+            
+            // Kiểm tra điều kiện
+            if (trackLessons + 1 < nextLessonOrdinal) {
+                alert('Lesson chưa được mở khóa! Học lesson trước tối thiểu 5 phút để mở khóa bài học tiếp theo!');
+                event.preventDefault();
+            } 
+        });
+    });
+
+
+// Thời gian chờ 5 phút (5*60*1000 = 300000ms)
+const delayTime = 60000;
+
+function sendRequest() {
+    console.log(1)
+    var course_id = document.getElementById('course_id').value;
+    var ordinal_number = Number(document.getElementById('ordinal_number').value);
+    var track_lessons = Number(document.getElementById('track_lessons').value);
+    console.log(track_lessons)
+    console.log(ordinal_number)
+    console.log(track_lessons + 1 === ordinal_number)
+    if (track_lessons + 1 === ordinal_number) {
+        console.log(2)
+        fetch('/user/progress/lessons', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Course_id: course_id,
+                Track_lessons: ordinal_number
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log(3)
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log(4)
+                // Cập nhật giá trị track_lessons và thông báo thành công
+                alert(data.message);
+                document.getElementById('track_lessons').value = data.newTrackLessons;
+
+                // Cập nhật giá trị data-track-lessons cho tất cả các nút bài học
+                document.querySelectorAll('.lesson-button').forEach(button => {
+                    button.setAttribute('data-track-lessons', data.newTrackLessons);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Request thất bại:", error);
+        });
+    }
+}
+
+// Đặt thời gian trì hoãn trước khi gửi request
+setTimeout(() => {
+    sendRequest();
+}, delayTime);
+
+
+</script>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+        min-height: 100px;
+    }
+</style>

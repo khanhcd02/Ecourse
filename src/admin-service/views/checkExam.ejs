@@ -1,0 +1,24 @@
+<div class="container">
+    <h1>Exam</h1>
+        <% questions.forEach((question, index) => { %>
+            <div class="form-group">
+                <div class="question"><%= question.Question %></div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="A" id="optionA<%= index %>" required>
+                    <label for="optionA<%= index %>"><%= question.A %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="B" id="optionB<%= index %>" required>
+                    <label for="optionB<%= index %>"><%= question.B %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="C" id="optionC<%= index %>" required>
+                    <label for="optionC<%= index %>"><%= question.C %></label>
+                </div>
+                <div class="option">
+                    <input type="radio" name="answers[<%= index %>]" value="D" id="optionD<%= index %>" required>
+                    <label for="optionD<%= index %>"><%= question.D %></label>
+                </div>
+            </div>
+        <% }) %>
+</div>

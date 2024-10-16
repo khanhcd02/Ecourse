@@ -102,16 +102,28 @@ exports.courses = (req, res) => {
   });
 };
 
-exports.courseDetail = (req, res) => {  
+exports.overviewCourse = (req, res) => {  
   Course.findById(req.params.courseId, (err, results) => {
     if (err) {
         console.error('Error fetching courses:', err);
-    } else {
-        res.render('../../layout', { 
-          title: 'courseDetail', 
-          user: req.user,
-          body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courseDetail.ejs'), 'utf8'), { user: req.user, course: results })
-        });
+    } else if (req.user) {
+      Course.checkCourseOfStudent({Course_id: req.params.courseId, Student_id: req.user.userId}, (err, resultsCheck) => {
+        if (err) {
+            console.error('Error fetching courses:', err);
+        } else {
+            res.render('../../layout', { 
+              title: 'overviewCourse', 
+              user: req.user,
+              body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'overviewCourse.ejs'), 'utf8'), { user: req.user, course: results, check: resultsCheck })
+            });
+        }
+      });
+    } else{
+      res.render('../../layout', { 
+        title: 'overviewCourse', 
+        user: req.user,
+        body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'overviewCourse.ejs'), 'utf8'), { user: req.user, course: results, check: null })
+      });
     }
   });
 };
