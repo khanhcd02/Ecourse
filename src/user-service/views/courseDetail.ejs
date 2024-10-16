@@ -1,0 +1,74 @@
+<div class="c">
+    <h1>Lessons </h1>
+<table class="table" id="lesson-list">
+    <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% lessons.forEach(lesson => { %>
+            <tr>
+                <% if (progress.Track_lessons + 1 >= lesson.Ordinal_number ) { %>
+                    <td>
+                        <form action="/user/learning/lesson" method="post">
+                            <input type="hidden" value="<%= progress.Course_id %>" name="course_id">
+                            <input type="hidden" value="<%= lesson.Id %>" name="lesson_id">
+                            <input type="hidden" value="<%= lesson.Ordinal_number %>" name="ordinal_number">
+                            <input type="hidden" value="<%= lessons.length %>" name="max_ordinal">
+                            <input type="hidden" value="<%= progress.Track_lessons %>" name="track_lessons">
+                            <input type="submit" value="<%= lesson.Title %>">
+                        </form>
+                        <!-- <a href="/learning/<%= progress.Course_id %>/lesson/<%= lesson.Id %>"><%= lesson.Title %></a> -->
+                    </td>
+                <% } else { %>
+                    <td><a href="#"><%= lesson.Title %>&#128274;</a></td>
+                <% } %>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<h1>Exams </h1>
+<table class="table" id="exam-list">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Exam time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% exams.forEach(exam => { %>
+            <tr>
+                <td><%= exam.Title %></td>
+                <td><%= exam.Exam_time %></td>
+                <td>
+                    <% if (progress.Track_lessons + 1 >= exam.Ordinal_number ) { %>
+                        <a href="/Exam/<%= progress.Course_id %>/takeExam/<%= exam.Id %>">Làm bài</a>
+                    <% } else { %>
+                        &#128274;
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+    }
+    .c th, td {
+        color: blue;
+    }
+    input[type="submit"] {
+        background-color: transparent;
+    border: none;
+    color: blue;
+}
+.c tr a {
+    text-decoration: none;
+}
+ </style>

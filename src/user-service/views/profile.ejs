@@ -3,7 +3,7 @@
   <div class="tab">
 	<button class="tablinks" id="defaultOpen" onclick="openTab(event, 'personal')">personal</button>
 	<button class="tablinks" onclick="openTab(event, 'learning')">learning</button>
-	<button class="tablinks" onclick="openTab(event, 'edit')">edit</button>
+	<button class="tablinks" onclick="openTab(event, 'edit')">...</button>
   </div>
   
   <!-- Tab content -->
@@ -31,7 +31,7 @@
     <tbody>
       <% progress.forEach(i => { %>
         <tr>
-          <td><%= i.Name_course %></td>
+          <td><a href="/home/courses/<%= i.Course_id %>"><%= i.Name_course %></a></td>
           <td><%= i.Track_lessons %></td>
           <td><%= i.Track_exams %></td>
           <td><%= new Date(i.Enrollment_date).toLocaleString('vi-VN') %></td>
@@ -46,11 +46,16 @@
     <ul class="shadow-button-set">
       <li><button><a style="text-decoration: none;color: #000;" href="/user/qrcode">Nạp tiền</a></button></li>
       <% if(user.Role === 'teacher') { %>
-        <li><button><a style="text-decoration: none;color: #000;" href="/courses">Khóa học của tôi</a></button></li>
+        <li><button><a style="text-decoration: none;color: #000;" href="/courses">Quản lý khóa học</a></button></li>
       <% } %>
-      <li><button>Online</button></li>
-      <li><button>Settings</button></li>
-      <li><button>Quit</button></li>
+      <% if(user.Role === 'admin') { %>
+        <li><button><a style="text-decoration: none;color: #000;" href="/admin/dashboard">Đến trang admin</a></button></li>
+      <% } %>
+      <li><button>Lịch sử giao dịch</button></li>
+      <% if(user.Role === 'student') { %>
+        <li><button><a style="text-decoration: none;color: #000;" href="/user/reqTeacher">Nâng cấp thành viên</a></button></li>
+      <% } %>
+      <li><button><a style="text-decoration: none;color: #000;" href="/auth/logout">Đăng xuất</a></button></li>
     </ul>
 </div>
 <style>

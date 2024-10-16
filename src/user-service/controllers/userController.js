@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
 const User = require('../models/user');
+const Teacher = require('../models/teacher')
 //const authenticateToken = require('../../../middleware/authMiddleware');
 
 exports.index = (req, res) => {
@@ -105,7 +106,7 @@ exports.transfer = (req, res) => {
 };
 
 exports.joinCourses = (req, res) => {
-  const { course_id, amount } = req.body;
+  const { course_id, amount, teacher_id } = req.body;
   join = {
     Student_id: req.userId,
     Amount: amount,
@@ -135,12 +136,19 @@ exports.joinCourses = (req, res) => {
                 console.error('Error fetching transaction:', err);
                 return res.status(500).send('Error fetching pay');
             } else {
-              res.send(`
-                <script>
-                    alert('Join to Course successful');
-                    window.location.href = '/home/courses';
-                </script>
-            `);
+              User.updateBalance({id: teacher_id,amount: amount}, (err, upBalance) => {
+                if (err) {
+                    console.error('Error fetching updateBalance:', err);
+                    return res.status(500).send('Error fetching pay');
+                } else {
+                  res.send(`
+                    <script>
+                        alert('Join to Course successful');
+                        window.location.href = '/home/courses';
+                    </script>
+                `);
+                }
+              });
             }
           });
         }
@@ -160,7 +168,122 @@ exports.updateProgressLessons = (req, res) => {
         console.error('Error fetching progressLesson:', err);
         return res.status(500).send('Error fetching progressLesson');
     } else {
-        console.log("cập nhật tiến trình bài học thành công!")
+        return res.status(200).json({ success: true, message: 'Mở khóa thành công bài học kế tiếp!', newTrackLessons: progressLesson.Track_lessons });
     }
   });
+}
+
+exports.Learning = (req, res) => {
+  const course_id = req.params.courseId;
+  const check = {
+    Student_id: req.userId,
+    Course_id: course_id
+  }
+  User.checkCourseOfStudent(check,(err, results) => {
+    if (err) {
+        console.error('Error fetching courses:', err);
+        return res.status(500).send('Server error');
+    } else {
+      if(results){
+        User.findLessons(course_id, (err, resultsLesson) => {
+          if (err) {
+              console.error('Error fetching lesson:', err);
+              return res.status(500).send('Server error');
+          }
+          User.findExams(course_id,(err, resultsExam) => {
+              if (err) {
+                  console.error('Error fetching exam:', err);
+                  return res.status(500).send('Server error');
+              } else {
+                  res.render('../../layout', { 
+                    title: 'courses', 
+                    user: req.userData,
+                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courseDetail.ejs'), 'utf8'), { lessons: resultsLesson, exams: resultsExam, progress: results })
+                  });
+              }
+            });
+      });
+      }else{
+        res.redirect("/home/")
+      }
+    }
+  });
+
+};
+
+exports.startLesson = (req, res) => {
+  const {course_id, lesson_id, ordinal_number, max_ordinal} = req.body;
+  const lesson = {
+    Course_id: course_id,
+    Ordinal_number: ordinal_number
+  }
+  User.checkCourseOfStudent({Student_id: req.userId, Course_id: course_id},(err, checkResult) => {
+    if (err) {
+        console.error('Error fetching courses:', err);
+        return res.status(500).send('Server error');
+    } else {
+      if(checkResult){
+        User.findLessonByOrdinal(lesson,(err, results) => {
+          if (err) {
+            console.error('Error fetching lesson:', err);
+            return res.status(500).send('Server error');
+          }
+          res.render('../../layout', { 
+            title: 'lesson', 
+            user: req.userData,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'lessonDetail.ejs'), 'utf8'), { lesson: results, max_ordinal, track_lessons: checkResult.Track_lessons, course_id })
+          });
+        })
+      }
+    }
+  })
+};
+
+exports.requestTeacherRole = (req, res) => {
+  const Certification = req.file.filename;
+  const request = {
+    User_id: req.userId,
+    Certification: Certification,
+    Expertise: req.body.Expertise,
+  }
+  Teacher.checkRequireTeacher(req.userId, (err, resultCheck) => {
+    if (err) {
+        console.error('Error fetching checkRequireTeacher:', err);
+        return res.status(500).send('Error fetching checkRequireTeacher');
+    } else {
+      if (resultCheck) {
+        Teacher.requestRole(request, (err, resultCheck) => {
+          if (err) {
+              console.error('Error fetching requestRole:', err);
+              return res.status(500).send('Error fetching requestRole');
+          } else {
+            res.redirect("/user/reqTeacher")
+          }
+        });
+      } else {
+        res.send(`
+          <script>
+              alert('Không đủ điều kiện!');
+              window.location.href = '/user/reqTeacher';
+          </script>
+      `);
+      }
+    }
+  });
+}
+
+exports.checkRequestTeacher = (req, res) => {
+  const id = req.userId
+  Teacher.checkRequestResult({id: id}, (err, resultCheck) => {
+    if (err) {
+        console.error('Error fetching checkRequestResult:', err);
+        return res.status(500).send('Error fetching checkRequestResult');
+    } else {
+      res.render('../../layout', { 
+        title: 'checkRequestResult', 
+        user: req.userData,
+        body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkReq.ejs'), 'utf8'), { checks: resultCheck, role: req.userData.Role })
+      });
+    }
+  })
 }

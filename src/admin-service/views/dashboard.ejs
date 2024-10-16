@@ -1,0 +1,266 @@
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-md-4 mt-5 mb-3">
+            <div class="card">
+                <div class="seo-fact sbg1">
+                    <div class="p-4 d-flex justify-content-between align-items-center">
+                        <div class="seofct-icon"><i class="fas fa-user-graduate"></i> Student</div>
+                        <h2><%= totalRole['student_count'] %></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-md-5 mb-3">
+            <div class="card">
+                <div class="seo-fact sbg2">
+                    <div class="p-4 d-flex justify-content-between align-items-center">
+                        <div class="seofct-icon"><i class="fas fa-chalkboard-teacher"></i> Teacher</div>
+                        <h2><%= totalRole['teacher_count'] %></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-5 mb-3">
+            <div class="card">
+                <div class="seo-fact sbg3">
+                    <div class="p-4 d-flex justify-content-between align-items-center">
+                        <div class="seofct-icon"><i class="fas fa-user-cog"></i> Admin</div>
+                        <h2><%= totalRole['admin_count'] %></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-md-9 mt-5 mb-3">
+            <div style="height: 600px; width: 100%; max-width: 800px;" id="money-statistics-Month"></div>
+        </div>
+        <div class="col-md-3 mt-5 mb-3">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Tháng</th>
+                    <th>Thu nhập</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% JSON.parse(formattedDataByMonth).forEach(i => { %>
+                    <tr>
+                      <td><%= i.date.slice(5, 7) %></td>
+                      <td><%= i.value %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+
+<input type="month" id="month-input" />
+<button id="filter-button" class="btn btn-primary">Lọc</button>
+<button id="resetButton" class="btn btn-secondary">Reset</button>
+
+<div style="height: 600px; width: 100%;" id="money-statistics"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Tải AmCharts trước khi sử dụng -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+<script>
+    if ($('#money-statistics-Month').length) {
+        // Lấy dữ liệu từ server-side (truyền từ controller)
+        const data = <%- formattedDataByMonth %>;
+
+        // Chuẩn bị dữ liệu cho AmCharts
+
+
+        var chartMonth = AmCharts.makeChart("money-statistics-Month", {
+            "type": "serial",
+            "theme": "light",
+            "marginRight": 40,  // Có thể điều chỉnh để tạo không gian
+            "marginLeft": 60,
+            "marginTop": 80,    // Thêm không gian phía trên
+            "marginBottom": 0,
+            "autoMarginOffset": 20,
+            "dataDateFormat": "YYYY-MM",
+            "valueAxes": [{
+                "id": "v1",
+                "axisAlpha": 0,
+                "position": "left",
+                "ignoreAxisWidth": true
+            }],
+            "balloon": {
+                "borderThickness": 1,
+                "shadowAlpha": 0
+            },
+            "graphs": [{
+                "id": "g1",
+                "balloon": {
+                    "drop": true,
+                    "adjustBorderColor": false,
+                    "color": "#ffffff",
+                    "type": "smoothedLine"
+                },
+                "fillAlphas": 0.2,
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "bulletSize": 5,
+                "hideBulletsCount": 50,
+                "lineThickness": 2,
+                "title": "red line",
+                "useLineColorForBulletBorder": true,
+                "valueField": "value",
+                "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+            }],
+            "chartCursor": {
+                "valueLineEnabled": true,
+                "valueLineBalloonEnabled": true,
+                "cursorAlpha": 0,
+                "zoomable": false,
+                "valueZoomable": true,
+                "valueLineAlpha": 0.5
+            },
+            "valueScrollbar": {
+                "autoGridCount": true,
+                "color": "#5E72F3",
+                "scrollbarHeight": 30
+            },
+            "categoryField": "date",
+            "categoryAxis": {
+                "parseDates": true,
+                "dashLength": 1,
+                "minorGridEnabled": true
+            },
+            "export": {
+                "enabled": false
+            },
+            "dataProvider": data  // Sử dụng dữ liệu từ server
+        });
+    }
+
+    if ($('#money-statistics').length) {
+        // Lấy dữ liệu từ server-side (truyền từ controller)
+        const data = <%- formattedData %>;
+  
+        // Hàm để lọc dữ liệu theo tháng
+        function filterDataByMonth(selectedMonth) {
+            const filteredData = data.filter(item => {
+                const date = new Date(item.date);
+                const month = date.getMonth() + 1; // getMonth() trả về tháng từ 0 đến 11
+                const year = date.getFullYear();
+                return (month === selectedMonth.month && year === selectedMonth.year);
+            });
+            return filteredData;
+        }
+
+        // Sự kiện khi nhấn nút Lọc
+        $('#filter-button').on('click', function() {
+            const monthInput = document.getElementById('month-input').value;
+            const selectedDate = new Date(monthInput);
+            const selectedMonth = { month: selectedDate.getMonth() + 1, year: selectedDate.getFullYear() };
+
+            // Lọc dữ liệu theo tháng đã chọn
+            const chartData = filterDataByMonth(selectedMonth);
+
+            // Cập nhật biểu đồ với dữ liệu đã lọc
+            chart.dataProvider = chartData;
+            chart.validateData(); // Cập nhật biểu đồ
+        });
+
+        $('#resetButton').on('click', function() {
+
+            // Cập nhật biểu đồ với dữ liệu ban đầu
+            chart.dataProvider = data;
+            chart.validateData(); // Xác nhận lại dữ liệu
+        });
+
+        var chart = AmCharts.makeChart("money-statistics", {
+            "type": "serial",
+            "theme": "light",
+            "marginRight": 40,  // Có thể điều chỉnh để tạo không gian
+            "marginLeft": 60,
+            "marginTop": 80,    // Thêm không gian phía trên
+            "marginBottom": 0,
+            "autoMarginOffset": 20,
+            "dataDateFormat": "YYYY-MM-DD",
+            "valueAxes": [{
+                "id": "v1",
+                "axisAlpha": 0,
+                "position": "left",
+                "ignoreAxisWidth": true
+            }],
+            "balloon": {
+                "borderThickness": 1,
+                "shadowAlpha": 0
+            },
+            "graphs": [{
+                "id": "g1",
+                "balloon": {
+                    "drop": true,
+                    "adjustBorderColor": false,
+                    "color": "#ffffff",
+                    "type": "smoothedLine"
+                },
+                "fillAlphas": 0.2,
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "bulletSize": 5,
+                "hideBulletsCount": 50,
+                "lineThickness": 2,
+                "title": "red line",
+                "useLineColorForBulletBorder": true,
+                "valueField": "value",
+                "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+            }],
+            "chartCursor": {
+                "valueLineEnabled": true,
+                "valueLineBalloonEnabled": true,
+                "cursorAlpha": 0,
+                "zoomable": false,
+                "valueZoomable": true,
+                "valueLineAlpha": 0.5
+            },
+            "valueScrollbar": {
+                "autoGridCount": true,
+                "color": "#5E72F3",
+                "scrollbarHeight": 30
+            },
+            "categoryField": "date",
+            "categoryAxis": {
+                "parseDates": true,
+                "dashLength": 1,
+                "minorGridEnabled": true
+            },
+            "export": {
+                "enabled": false
+            },
+            "dataProvider": data 
+        });
+
+        // var dt = new Date();
+        // var mo = {
+        //     month: dt.getMonth()+1,
+        //     year: dt.getFullYear()
+        // }
+        // var cData = filterDataByMonth(mo);
+        // chart.dataProvider = cData;
+        // chart.validateData();
+    }
+</script>
+<style>
+    table {
+        width: 100%; 
+    }
+
+    th, td {
+        padding: 10px; 
+    }
+</style>

@@ -1,0 +1,59 @@
+<div class="c">
+    <table>
+        <thead>
+          <tr>
+            <th>Tên khóa học</th>
+            <th>Hình ảnh</th>
+            <th>Thể loại</th>
+            <th>Giáo viên</th>
+            <th>Học phí</th>
+            <th>Thời lượng</th>
+            <th>Mô tả ngắn gọn</th>
+            <th>Xử lý</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% courses.forEach(i => { %>
+            <tr>
+              <td><a href="/admin/checkCourse/<%= i.Id %>"><%= i.Name_course %></a></td>
+              <td><%= i.Image %></td>
+              <td><%= i.Category_id %></td>
+              <td><%= i.Teacher_id %></td>
+              <td><%= i.Tuition %></td>
+              <td><%= i.Duration %></td>
+              <td><%= i.Short_describe %></td>
+              <td><form action="/admin/resolveReqCourse" method="post">
+                <input type="hidden" value="<%= i.Id %>" name="Course_id">
+                <button type="submit" name="action" value="approve">Chấp nhận</button>
+                <button type="submit" name="action" value="reject">Từ chối</button>
+              </form></td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+    
+</div>
+
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        max-width: 100%;
+        min-height: 400px;
+        margin: 50px auto;
+    }
+    table {
+        width: 100%; 
+    }
+
+    th, td {
+        padding: 10px; 
+    }
+    .btnReq {
+        display: block; 
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
+
+
+</style>

@@ -29,4 +29,5 @@ router.get('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
 router.post('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
 router.post('/update-lessons-order', verifyTeacher, courseController.updateLessonsOrder);
 router.post('/update-exams-order', verifyTeacher, courseController.updateExamsOrder);
+router.post('/reqCourse', verifyTeacher, courseController.reqCourse);
 module.exports = router;

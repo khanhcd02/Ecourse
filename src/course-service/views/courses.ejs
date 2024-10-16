@@ -16,13 +16,19 @@
                             <div class="bg-secondary p-4">
                                 <div class="d-flex justify-content-between mb-3">
                                     <small class="m-0"><i class="fa fa-users text-primary mr-2"></i><%= course.Teacher_id %></small>
-                                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>01h 30m</small>
+                                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i><%= course.Duration %>h</small>
                                 </div>
                                 <a class="h5" href="/courses/<%= course.Id %>"><%= course.Name_course %></a>
+                                <h5 class="m-0">Học phí: <%= course.Tuition %> VNĐ</h5>
                                 <div class="border-top mt-4 pt-4">
                                     <div class="d-flex justify-content-between">
-                                        <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6>
-                                        <h5 class="m-0"><%= course.Tuition %> VNĐ</h5>
+                                        <h6 class="m-0">Trạng thái: <%= course.Status %></h6>
+                                        <% if (course.Status === 'Draft') { %>
+                                            <form action="/courses/reqCourse" method="post">
+                                                <input type="hidden" value="<%= course.Id %>" name="Course_id">
+                                                <button type="submit">Yêu cầu duyệt</button>
+                                            </form>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>

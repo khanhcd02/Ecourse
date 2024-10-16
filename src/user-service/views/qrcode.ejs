@@ -29,43 +29,68 @@
 <script>
     const paidContentElement = document.getElementById('paidContent');
     const paidContent = paidContentElement.textContent.trim();
-    const currentTime = Date.now()
-async function checkPaid() {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxwAbgXeQValJm3dB9oMz8O9jUaUutDGq-9VLT_XRIdA2e59t5oXXOgEXnGaMh2Jc80iA/exec");
-    const data = await response.json()
-    const lastPaid = data.data[data.data.length - 1]
-    const lastContent = lastPaid["Mô tả"]
-    const lastMoney = lastPaid["Giá trị"]
-    const targetTime = new Date(lastPaid['Ngày diễn ra']);
-    if (currentTime < targetTime.getTime() && lastContent.includes(paidContent)) {
-        console.log(`Đã nạp thành công ${lastMoney} VNĐ`)
-        const paymentData = {
-                value: lastMoney,
-                date: lastPaid['Ngày diễn ra'],
-                content: paidContent
-            };
+    const currentTime = Date.now();
 
-        const saveResponse = await fetch("/user/qrcode", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(paymentData)
-        });
-        if (saveResponse.ok) {
-            console.log("Payment data saved successfully");
+    async function checkPaid() {
+        try {
+            // Lấy dữ liệu từ Google Apps Script
+            const response = await fetch("https://script.google.com/macros/s/AKfycbxwAbgXeQValJm3dB9oMz8O9jUaUutDGq-9VLT_XRIdA2e59t5oXXOgEXnGaMh2Jc80iA/exec");
+            
+            if (!response.ok) {
+                throw new Error("Error fetching data from Google Sheets");
+            }
 
-            // Chuyển hướng sau khi lưu thành công
-            window.location.href = "/user/success-page";
-        } else {
-            console.error("Failed to save payment data");
+            const data = await response.json();
+            const lastPaid = data.data[data.data.length - 1];
+            const lastContent = lastPaid["Mô tả"];
+            const lastMoney = lastPaid["Giá trị"];
+            const targetTime = new Date(lastPaid['Ngày diễn ra']);
+            console.log(data.data)
+            console.log("Current Time:", currentTime); // Thời gian hiện tại
+            console.log("Target Time:", targetTime.getTime()); // Thời gian từ dữ liệu
+            console.log(lastContent)
+            console.log(paidContent)
+            console.log(currentTime < targetTime.getTime())
+            console.log(lastContent.includes(paidContent))
+            // Kiểm tra thời gian và nội dung
+            if (currentTime < targetTime.getTime() && lastContent.includes(paidContent)) {
+                console.log(`Đã nạp thành công ${lastMoney} VNĐ`);
+
+                // Tạo dữ liệu giao dịch
+                const paymentData = {
+                    value: lastMoney,
+                    date: lastPaid['Ngày diễn ra'],
+                    content: paidContent
+                };
+
+                // Gửi POST request tới backend
+                const saveResponse = await fetch("/user/qrcode", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+
+                if (saveResponse.ok) {
+                    console.log("Payment data saved successfully");
+
+                    // Chuyển hướng sau khi lưu thành công
+                    window.location.href = "/user/success-page";
+                } else {
+                    console.error("Failed to save payment data");
+                }
+            } else {
+                console.log("Waiting for valid payment...");
+            }
+
+        } catch (error) {
+            console.error("Error during fetch or processing: ", error);
         }
-    }else{
-        console.log("Waiting...")
     }
-    
-}
-setInterval(() => {
-    checkPaid()
-},5000)
+
+    // Kiểm tra giao dịch mỗi 60 giây
+    setInterval(() => {
+        checkPaid();
+    }, 60000);
 </script>

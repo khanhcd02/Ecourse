@@ -1,0 +1,117 @@
+<div class="c">
+    <table>
+        <thead>
+          <tr>
+            <th>Certification</th>
+            <th>Expertise</th>
+            <th>Request_status</th>
+            <th>Created_at</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% checks.forEach(i => { %>
+            <tr>
+              <td><%= i.Certification %></td>
+              <td><%= i.Expertise %></td>
+              <td><%= i.Request_status %></td>
+              <td><%= i.Created_at %></td>
+              <td><%= i.Note %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+    <% if (role === 'teacher') { %>
+        <button class="btnReq">Bạn đã là giáo viên rồi!</button>
+    <% } else { %>
+        <button id="openFormBtn" class="btnReq">Yêu cầu trở thành giáo viên</button>
+    <% } %>
+    
+</div>
+<div id="popupForm" class="popup-form">
+  <div class="form-container">
+    <span class="close-btn" id="closeFormBtn">&times;</span>
+    <h2>Đăng kí trở thành giáo viên</h2>
+    <form action="/user/reqTeacher" method="POST" enctype="multipart/form-data">
+        <label for="Certification">Chứng chỉ:</label>
+        <input type="file" class="form-control-file" id="Certification" name="Certification" required><br><br>
+        <label for="Expertise">Chuyên môn:</label>
+        <input type="text" id="Expertise" name="Expertise" required><br><br>
+        <button type="submit">Gửi yêu cầu</button>
+    </form>
+    <p style="font-style: italic; color: red;">Lưu ý: Tài khoản phải có tối thiểu 20000 VNĐ (phí đăng ký)!</p>
+  </div>
+</div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        max-width: 60%;
+        min-height: 400px;
+        margin: 50px auto;
+    }
+    table {
+        width: 100%; 
+    }
+
+    th, td {
+        padding: 10px; 
+    }
+    .btnReq {
+        display: block; 
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
+/* Ẩn form ban đầu */
+#popupForm {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Hiệu ứng nền mờ */
+  z-index: 999; /* Nổi lên trên */
+}
+
+.form-container {
+  background-color: white;
+  padding: 20px;
+  margin: 15% auto;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+</style>
+<script>
+    const openFormBtn = document.getElementById('openFormBtn');
+const closeFormBtn = document.getElementById('closeFormBtn');
+const popupForm = document.getElementById('popupForm');
+
+// Mở form khi click vào nút
+openFormBtn.onclick = function() {
+  popupForm.style.display = 'block';
+}
+
+// Đóng form khi click vào nút đóng
+closeFormBtn.onclick = function() {
+  popupForm.style.display = 'none';
+}
+
+// Đóng form khi click ra ngoài form
+window.onclick = function(event) {
+  if (event.target === popupForm) {
+    popupForm.style.display = 'none';
+  }
+}
+
+</script>

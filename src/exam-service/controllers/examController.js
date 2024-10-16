@@ -68,7 +68,10 @@ exports.submitExam = (req, res) => {
 
             // Cập nhật điểm số vào `answer_sheet`
             const totalQuestions = questions.length;
-            const score = (correctCount / totalQuestions) * 100;
+            const score = 0
+            if (totalQuestions > 0) {
+               score = (correctCount / totalQuestions) * 100;
+            }
 
             AnswerSheet.update({ Score: score, Id: sheetId}, (err, upAnswerSheet) => {
                 if (err) {
