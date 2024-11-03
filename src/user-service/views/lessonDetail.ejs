@@ -1,5 +1,6 @@
 
 <div class="c">
+    <h3><%- lesson.Title %></h3>
     <input type="hidden" value="<%= course_id %>" id="course_id">
     <input type="hidden" value="<%= track_lessons %>" id="track_lessons">
     <input type="hidden" value="<%= lesson.Ordinal_number %>" id="ordinal_number">
@@ -7,26 +8,29 @@
 
     <div id="getContent"></div>
 </div>
-<div>
+
+<div class="form-container">
     <% if (lesson.Ordinal_number - 1 > 0) { %>
         <form action="/user/learning/lesson" method="post">
             <input type="hidden" value="<%= course_id %>" name="course_id">
             <input type="hidden" value="<%= lesson.Ordinal_number - 1 %>" name="ordinal_number">
             <input type="hidden" value="<%= max_ordinal %>" name="max_ordinal">
-            <input type="hidden" value="<%= track_lessons %>" name="track_lessons" id="track_lessons">
-            <input type="submit" value="Bài học trước">
+            <input type="hidden" value="<%= track_lessons %>" name="track_lessons">
+            <input class="lesson-button pre-btn" type="submit" value="Bài học trước">
         </form>
     <% } %>
+
     <% if (lesson.Ordinal_number < max_ordinal ) { %>
         <form action="/user/learning/lesson" method="post">
             <input type="hidden" value="<%= course_id %>" name="course_id">
             <input type="hidden" value="<%= lesson.Ordinal_number + 1 %>" name="ordinal_number">
             <input type="hidden" value="<%= max_ordinal %>" name="max_ordinal">
-            <input type="hidden" value="<%= track_lessons %>" name="track_lessons" id="track_lessons">
-            <input class="lesson-button" data-track-lessons="<%= track_lessons %>" data-next-lesson-ordinal="<%= lesson.Ordinal_number + 1 %>" type="submit" value="Bài học sau">
+            <input type="hidden" value="<%= track_lessons %>" name="track_lessons">
+            <input class="lesson-button next-btn" type="submit" value="Bài học sau">
         </form>
     <% } %>
 </div>
+
 <script>
     var longText = document.getElementById('content').innerHTML;
     document.getElementById('getContent').innerHTML = longText;
@@ -47,7 +51,7 @@
 
 
 // Thời gian chờ 5 phút (5*60*1000 = 300000ms)
-const delayTime = 60000;
+const delayTime = 300000;
 
 function sendRequest() {
     console.log(1)
@@ -103,9 +107,74 @@ setTimeout(() => {
 
 </script>
 <style>
-    .c {
-        background-color: rgba(255, 255, 255, 0.5);
-        margin-top: 20px;
-        min-height: 100px;
+    .pre-btn {
+        float: left;
     }
+
+    .next-btn {
+        float: right;
+    }
+
+   .c {
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 20px auto;
+    min-height: 100px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    width: 70%;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.lesson-button {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.lesson-button:hover {
+    background-color: #007bb5;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin: auto;
+}
+
+.alert {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
 </style>

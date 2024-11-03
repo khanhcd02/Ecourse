@@ -5,15 +5,17 @@
   "main": "server.js",
   "scripts": {
     "start:api-gateway": "nodemon ./server.js",
-    "start:auth-service": "cd ./src/auth-service && node app.js",
-    "start:home-service": "node ./src/home-service/app.js",
-    "start:user-service": "node ./src/user-service/app.js",
-    "start:course-service": "node ./src/course-service/app.js",
-    "start:exam-service": "node ./src/exam-service/app.js",
-    "start:all": "concurrently \"npm run start:api-gateway\" \"npm run start:auth-service\" \"npm run start:home-service\" \"npm run start:user-service\" \"npm run start:course-service\" \"npm run start:exam-service\"",
+    "start:auth-service": "nodemon ./src/auth-service/app.js",
+    "start:home-service": "nodemon ./src/home-service/app.js",
+    "start:user-service": "nodemon ./src/user-service/app.js",
+    "start:course-service": "nodemon ./src/course-service/app.js",
+    "start:exam-service": "nodemon ./src/exam-service/app.js",
+    "start:admin-service": "nodemon ./src/admin-service/app.js",
+    "start:all": "concurrently \"npm run start:api-gateway\" \"npm run start:auth-service\" \"npm run start:home-service\" \"npm run start:user-service\" \"npm run start:course-service\" \"npm run start:exam-service\" \"npm run start:admin-service\"",
     "stop": "echo 'Stopping services not implemented'"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -32,6 +34,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
+    "randomstring": "^1.3.0",
     "sweetalert2": "^11.14.3"
   },
   "devDependencies": {

@@ -7,6 +7,7 @@ const path = require('path');
 const Course = require('../models/course');
 const Teacher = require('../models/teacher');
 const Stats = require('../models/stats')
+const Category = require('../models/category')
 
 exports.getReqTeacher = (req, res) => {  
     Teacher.checkRequestRole({},(err, results) => {
@@ -174,6 +175,20 @@ exports.checkCourse = (req, res) => {
     });
 };
 
+exports.checkLesson = (req, res) => {  
+    const Lesson_id = req.params.Lesson_id;
+    Course.findLessonDetailById(Lesson_id,(err, resultsLesson) => {
+        if (err) {
+            console.error('Error fetching getReqTeacher:', err);
+        } 
+        res.render('../../adminLayout', { 
+            title: 'Check Lesson', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkLesson.ejs'), 'utf8'), { lesson: resultsLesson})
+        });
+    });
+};
+
 exports.checkExam = (req, res) => {  
     const Exam_id = req.params.Exam_id;
     Course.demoExam(Exam_id,(err, results) => {
@@ -185,5 +200,50 @@ exports.checkExam = (req, res) => {
             user: req.user,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkExam.ejs'), 'utf8'), { questions: results })
         });
+    });
+};
+
+exports.getCategories = (req, res) => {  
+    Category.getCategories((err, results) => {
+        if (err) {
+            console.error('Error fetching getReqTeacher:', err);
+        } 
+        res.render('../../adminLayout', { 
+            title: 'Categories', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'categories.ejs'), 'utf8'), { categories: results })
+        });
+    });
+};
+
+exports.addCategory = (req, res) => {
+    const c_name = req.body.Category_name;
+    Category.addCategory(c_name,(err, results) => {
+        if (err) {
+            console.error('Error fetching getReqTeacher:', err);
+        } 
+        return res.redirect('/admin/categories')
+    });
+};
+
+exports.updateCategory = (req, res) => {  
+    const c_id = req.body.category_id;
+    const c_name = req.body.category_name;
+    Category.updateCategory({Id: c_id, Category_name: c_name},(err, results) => {
+        if (err) {
+            res.status(400).json({ message: 'Category not found' });
+        } 
+        res.status(200).json({ message: 'Category updated successfully' });
+    });
+};
+
+exports.updateStatus = (req, res) => {  
+    const c_id = req.body.category_id;
+    const status = req.body.status;
+    Category.updateStatus({Id: c_id, Status: status},(err, results) => {
+        if (err) {
+            res.status(400).json({ message: 'Category not found' });
+        } 
+        res.status(200).json({ message: 'Category updated successfully' });
     });
 };

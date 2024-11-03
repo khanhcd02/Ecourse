@@ -1,111 +1,124 @@
 <div class="c">
-    <table>
-        <thead>
+  <table>
+      <thead>
+        <tr>
+          <th>Chứng chỉ</th>
+          <th>Chuyên môn</th>
+          <th>Trạng thái</th>
+          <th>Thời gian tạo</th>
+          <th>Xử lý</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% requests.forEach(i => { %>
           <tr>
-            <th>Chứng chỉ</th>
-            <th>Chuyên môn</th>
-            <th>Trạng thái</th>
-            <th>Thời gian tạo</th>
-            <th>Ghi chú</th>
-            <th>Xử lý</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% requests.forEach(i => { %>
-            <tr>
-              <td><%= i.Certification %></td>
-              <td><%= i.Expertise %></td>
-              <td><%= i.Request_status %></td>
-              <td><%= i.Created_at %></td>
-              <td><%= i.Note %></td>
-              <td><form action="/admin/resolveReqTeacher" method="post">
+            <td><img class="thumbnail" style="width: 50px;height: 50px;" src="/certification/<%= i.Certification %>"></td>
+            <td><%= i.Expertise %></td>
+            <td><%= i.Request_status %></td>
+            <td><%= i.Created_at.toLocaleString('vi-VN') %></td>
+            <td>
+              <form action="/admin/resolveReqTeacher" method="post">
                 <input type="hidden" value="<%= i.Id %>" name="Req_id">
                 <input type="hidden" value="<%= i.User_id %>" name="User_id">
-                <button type="submit" name="action" value="approve">Chấp nhận</button>
-                <button type="submit" name="action" value="reject">Từ chối</button>
-              </form></td>
-            </tr>
-          <% }) %>
-        </tbody>
-    </table>
-    
+                <button class="btn btn-success" type="submit" name="action" value="approve">Chấp nhận</button>
+                <button class="btn btn-danger" type="submit" name="action" value="reject">Từ chối</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+  </table>
 </div>
-<div id="popupForm" class="popup-form">
-  <div class="form-container">
-    <span class="close-btn" id="closeFormBtn">&times;</span>
-    
-  </div>
+
+<!-- Modal for enlarged image -->
+<div id="imageModal" class="modal">
+<span class="close">&times;</span>
+<img class="modal-content" id="modalImage">
 </div>
+
 <style>
-    .c {
-        background-color: rgba(255, 255, 255, 0.5);
-        max-width: 100%;
-        min-height: 400px;
-        margin: 50px auto;
-    }
-    table {
-        width: 100%; 
-    }
-
-    th, td {
-        padding: 10px; 
-    }
-    .btnReq {
-        display: block; 
-        margin: 0 auto;
-        padding: 10px 20px;
-    }
-/* Ẩn form ban đầu */
-#popupForm {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Hiệu ứng nền mờ */
-  z-index: 999; /* Nổi lên trên */
-}
-
-.form-container {
-  background-color: white;
-  padding: 20px;
-  margin: 15% auto;
-  width: 300px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-</style>
-<!-- <script>
-    const openFormBtn = document.getElementById('openFormBtn');
-const closeFormBtn = document.getElementById('closeFormBtn');
-const popupForm = document.getElementById('popupForm');
-
-// Mở form khi click vào nút
-openFormBtn.onclick = function() {
-  popupForm.style.display = 'block';
-}
-
-// Đóng form khi click vào nút đóng
-closeFormBtn.onclick = function() {
-  popupForm.style.display = 'none';
-}
-
-// Đóng form khi click ra ngoài form
-window.onclick = function(event) {
-  if (event.target === popupForm) {
-    popupForm.style.display = 'none';
+  .c {
+      background-color: rgba(255, 255, 255, 0.5);
+      max-width: 100%;
+      min-height: 400px;
+      margin: 50px auto;
   }
-}
+  table {
+      width: 100%; 
+  }
+  th, td {
+      padding: 10px; 
+  }
+  .btnReq {
+      display: block; 
+      margin: 0 auto;
+      padding: 10px 20px;
+  }
 
-</script> -->
+  /* Modal styling */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .modal-content {
+    margin: 5% auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Add animation for modal (optional) */
+  .modal-content {
+    animation: zoomIn 0.3s;
+  }
+
+  @keyframes zoomIn {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+  }
+</style>
+
+<script>
+  // Get the modal for image
+  var modal = document.getElementById("imageModal");
+  var modalImg = document.getElementById("modalImage");
+  var closeBtn = document.getElementsByClassName("close")[0];
+
+  // Add click event to all thumbnail images
+  document.querySelectorAll('.thumbnail').forEach(img => {
+    img.addEventListener('click', function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    });
+  });
+
+  // When the user clicks on close (x), close the modal
+  closeBtn.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // Đóng modal ảnh khi click ra ngoài ảnh
+  window.addEventListener('click', function(event) {
+    if (event.target === modal && !event.target.closest('.modal-content')) {
+      modal.style.display = "none";
+    }
+  });
+</script>

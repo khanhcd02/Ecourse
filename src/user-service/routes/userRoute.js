@@ -34,6 +34,7 @@ router.post('/join', verifyToken, userController.joinCourses);
 router.post('/progress/lessons', verifyToken, userController.updateProgressLessons);
 router.get('/learning/:courseId', verifyToken, userController.Learning);
 router.post('/learning/lesson', verifyToken, userController.startLesson);
+router.get('/check/trans', verifyToken, userController.checkTrans);
 router.get('/reqTeacher', verifyToken, userController.checkRequestTeacher);
 router.post('/reqTeacher', verifyToken, uploadCertification.single('Certification'), userController.requestTeacherRole);
 

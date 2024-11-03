@@ -3,15 +3,15 @@
         <div id="question-list">
             <div class="question-item">
                 <label for="question">Question:</label>
-                <input class="q" type="text" name="questions[0][Question]" required><br>
+                <input class="form-control" type="text" name="questions[0][Question]" required><br>
                 <label for="A">Option A:</label>
-                <input type="text" name="questions[0][A]" required>
+                <input class="form-control answer" type="text" name="questions[0][A]" required>
                 <label for="B">Option B:</label>
-                <input type="text" name="questions[0][B]" required><br>
+                <input class="form-control answer" type="text" name="questions[0][B]" required><br>
                 <label for="C">Option C:</label>
-                <input type="text" name="questions[0][C]" required>
+                <input class="form-control answer" type="text" name="questions[0][C]" required>
                 <label for="D">Option D:</label>
-                <input type="text" name="questions[0][D]" required><br>
+                <input class="form-control answer" type="text" name="questions[0][D]" required><br>
                 <label for="Answer">Correct Answer:</label>
                 <select name="questions[0][Answer]">
                     <option value="A">A</option>
@@ -21,24 +21,35 @@
                 </select>
             </div>
         </div>
-        <button type="button" id="add-question-btn">+ Add Question</button>
-        <button type="submit">Save Exam</button>
+        <button type="button" class="btn btn-success" id="add-question-btn">+ Add Question</button>
+        <button class="btn btn-warning" type="submit">Save Exam</button>
     </form>
 </div>
 <style>
     .c {
-        background-color: #ecc393;
+        background-color: #f0e0cd;
         margin-top: 20px;
-        max-width: 50%;
+        max-width: 60%;
         margin: auto;
         margin-top: 50px;
+        border-radius: 20px;
     }
-    .q {
-        width: 80%;
-    }
+
     body {
         background-color: #f9f5eb;
         background-image: none;
+    }
+    form {
+        padding: 25px;
+    }
+
+    form label {
+        margin-left: 10px;
+    }
+
+    .answer {
+        max-width: 25%;
+        display: inline;
     }
 </style>
 <script>
@@ -48,16 +59,17 @@
         const newQuestion = document.createElement('div');
         newQuestion.classList.add('question-item');
         newQuestion.innerHTML = `
+            <br>
             <label for="question">Question:</label>
-            <input class="q" type="text" name="questions[${questionCount}][Question]" required><br>
+            <input class="form-control" type="text" name="questions[${questionCount}][Question]" required><br>
             <label for="A">Option A:</label>
-            <input type="text" name="questions[${questionCount}][A]" required>
+            <input class="form-control answer" type="text" name="questions[${questionCount}][A]" required>
             <label for="B">Option B:</label>
-            <input type="text" name="questions[${questionCount}][B]" required><br>
+            <input class="form-control answer" type="text" name="questions[${questionCount}][B]" required><br>
             <label for="C">Option C:</label>
-            <input type="text" name="questions[${questionCount}][C]" required>
+            <input class="form-control answer" type="text" name="questions[${questionCount}][C]" required>
             <label for="D">Option D:</label>
-            <input type="text" name="questions[${questionCount}][D]" required><br>
+            <input class="form-control answer" type="text" name="questions[${questionCount}][D]" required><br>
             <label for="Answer">Correct Answer:</label>
             <select name="questions[${questionCount}][Answer]">
                 <option value="A">A</option>

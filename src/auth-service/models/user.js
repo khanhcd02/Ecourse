@@ -13,6 +13,16 @@ const User = {
     });
   },
 
+  checkUsername: (username, callback) => {
+    const query = 'SELECT * FROM users WHERE Username = ?';
+    db.query(query, [username], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results[0]);
+    });
+  },
+
   findOne: (username, callback) => {
     const query = 'SELECT * FROM users WHERE Username = ?';
     db.query(query, [username], (err, results) => {

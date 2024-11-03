@@ -1,24 +1,107 @@
-<div class="container">
-    <h1>Exam</h1>
-        <% questions.forEach((question, index) => { %>
-            <div class="form-group">
-                <div class="question"><%= question.Question %></div>
-                <div class="option">
-                    <input type="radio" name="answers[<%= index %>]" value="A" id="optionA<%= index %>" required>
-                    <label for="optionA<%= index %>"><%= question.A %></label>
-                </div>
-                <div class="option">
-                    <input type="radio" name="answers[<%= index %>]" value="B" id="optionB<%= index %>" required>
-                    <label for="optionB<%= index %>"><%= question.B %></label>
-                </div>
-                <div class="option">
-                    <input type="radio" name="answers[<%= index %>]" value="C" id="optionC<%= index %>" required>
-                    <label for="optionC<%= index %>"><%= question.C %></label>
-                </div>
-                <div class="option">
-                    <input type="radio" name="answers[<%= index %>]" value="D" id="optionD<%= index %>" required>
-                    <label for="optionD<%= index %>"><%= question.D %></label>
-                </div>
-            </div>
-        <% }) %>
-</div>
+<form id="examViewForm">
+    <% questions.forEach(function(question, index) { %>
+      <div class="question-block">
+        <h4>Câu hỏi <%= index + 1 %>: <%= question.Question %></h4>
+        <div>
+          <input type="radio" id="optionA<%= index %>" name="question<%= index %>" value="A" disabled <% if (question.Answer === 'A') { %> checked <% } %>>
+          <label for="optionA<%= index %>">A: <%= question.A %></label>
+        </div>
+        <div>
+          <input type="radio" id="optionB<%= index %>" name="question<%= index %>" value="B" disabled <% if (question.Answer === 'B') { %> checked <% } %>>
+          <label for="optionB<%= index %>">B: <%= question.B %></label>
+        </div>
+        <div>
+          <input type="radio" id="optionC<%= index %>" name="question<%= index %>" value="C" disabled <% if (question.Answer === 'C') { %> checked <% } %>>
+          <label for="optionC<%= index %>">C: <%= question.C %></label>
+        </div>
+        <div>
+          <input type="radio" id="optionD<%= index %>" name="question<%= index %>" value="D" disabled <% if (question.Answer === 'D') { %> checked <% } %>>
+          <label for="optionD<%= index %>">D: <%= question.D %></label>
+        </div>
+      </div>
+    <% }); %>
+  </form>
+<style>
+/* Toàn bộ form */
+#examViewForm {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Khối câu hỏi */
+.question-block {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề câu hỏi */
+.question-block h4 {
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Đáp án */
+.question-block div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Radio button và nhãn đáp án */
+.question-block input[type="radio"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+  accent-color: #007bff; /* Màu xanh cho radio button */
+}
+
+.question-block label {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Hiển thị khi chọn đáp án */
+input[type="radio"]:checked + label {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Tạo hiệu ứng cho câu trả lời đúng */
+input[type="radio"][value="C"]:checked + label, /* Thay C bằng giá trị đúng */
+input[type="radio"][value="B"]:checked + label, /* Thay B bằng giá trị đúng */
+input[type="radio"][value="A"]:checked + label, /* Thay A bằng giá trị đúng */
+input[type="radio"][value="D"]:checked + label { /* Thay D bằng giá trị đúng */
+  color: #28a745; /* Màu xanh lá cho câu trả lời đúng */
+  font-weight: bold;
+}
+
+/* Tạo khoảng cách và bố trí đẹp hơn cho câu hỏi */
+@media (max-width: 600px) {
+  #examViewForm {
+    padding: 10px;
+  }
+  
+  .question-block {
+    padding: 15px;
+  }
+
+  .question-block h4 {
+    font-size: 1rem;
+  }
+
+  .question-block div {
+    font-size: 0.9rem;
+  }
+}
+
+</style>

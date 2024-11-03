@@ -68,7 +68,7 @@ exports.submitExam = (req, res) => {
 
             // Cập nhật điểm số vào `answer_sheet`
             const totalQuestions = questions.length;
-            const score = 0
+            let score = 0
             if (totalQuestions > 0) {
                score = (correctCount / totalQuestions) * 100;
             }
@@ -77,7 +77,7 @@ exports.submitExam = (req, res) => {
                 if (err) {
                     return res.status(500).send('Error updating score');
                 }
-                if (score > 70) {
+                if (score >= 70) {
                     const progressExam = {
                         Student_id: req.userId,
                         Course_id: req.body.Course_id,
@@ -93,7 +93,12 @@ exports.submitExam = (req, res) => {
                       });
                 }
                 // Gửi kết quả sau khi nộp bài
-                res.render('examResult', { score, correctCount, totalQuestions });
+                res.render('../../layout', { 
+                    title: 'courses', 
+                    user: req.user,
+                    categories: req.categories,
+                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'examResult.ejs'), 'utf8'), { score, correctCount, totalQuestions })
+                });
             });
         // Tạo bài làm (answer sheet) trước khi lưu chi tiết câu trả lời
         

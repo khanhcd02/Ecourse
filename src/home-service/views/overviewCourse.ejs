@@ -1,36 +1,133 @@
-<div style="background-color: white; width: 50%;margin: auto;">
-    <%= course.Name_course %>
-    <div style="display: flex; gap: 10px;">
-        <div style="display: flex; flex-direction: column;">
+<div class="course-overview-container">
+    <h1 class="course-title"><%= course.Name_course %></h1>
+    <div class="course-info">
+        <div class="course-detail">
             <label>Teacher</label>
-            <a href=""><%= course.Teacher_id %></a>
+            <a href=""><%= course.Fullname %></a>
         </div>
-        <div style="display: flex; flex-direction: column;">
+        <div class="course-detail">
             <label>Categories</label>
-            <a href=""><%= course.Category_id %></a>
+            <a href=""><%= course.Category_name %></a>
         </div>
-        <div style="display: flex; flex-direction: column;">
+        <div class="course-detail">
             <label>Tuition</label>
             <span><%= course.Tuition %></span>
         </div>
-        <form action="/user/join" method="post">
-            <% if (user) { %>
-                <% if (check) { %>
-                    <a href="/user/learning/<%= course.Id %>">Learning</a>
-                <% } else { %>
-                    <input type="hidden" value="<%= course.Id %>" name="course_id">
-                    <input type="hidden" value="<%= course.Tuition %>" name="amount">
-                    <input type="hidden" value="<%= course.Teacher_id %>" name="teacher_id">
-                    <input type="submit" value="Đăng kí khóa học" ></input>
-                <% } %>
-            <% } else { %>
-                <a href="/auth/login">LOGIN TO JOIN</a>
-            <% } %>
-        </form>
     </div>
-    <img class="img-fluid" src="<%= course.Image%>" alt="course Avatar">
-    <div>
+    
+    <form action="/user/join" method="post" class="join-form">
+        <% if (user) { %>
+            <% if (check) { %>
+                <a class="btn-learning" href="/user/learning/<%= course.Id %>">Learning</a>
+            <% } else { %>
+                <input type="hidden" value="<%= course.Id %>" name="course_id">
+                <input type="hidden" value="<%= course.Tuition %>" name="amount">
+                <input type="hidden" value="<%= course.Teacher_id %>" name="teacher_id">
+                <input class="btn-join" type="submit" value="Đăng kí khóa học">
+            <% } %>
+        <% } else { %>
+            <a class="btn-login" href="/auth/login">LOGIN TO JOIN</a>
+        <% } %>
+    </form>
+
+    <img class="course-image" src="<%= course.Image %>" alt="course Avatar">
+    
+    <div class="course-description">
         <h4>DESCRIPTION</h4>
-        <P><%= course.Short_describe %></P>
+        <p><%= course.Short_describe %></p>
     </div>
 </div>
+
+<style>
+    /* Tổng thể */
+    .course-overview-container {
+        background-color: #fff;
+        width: 60%;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    .course-title {
+        text-align: center;
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .course-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .course-detail {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .course-detail label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .course-detail a, .course-detail span {
+        color: #007bff;
+        font-size: 1.1rem;
+        text-decoration: none;
+    }
+
+    /* Form Đăng ký/Learning */
+    .join-form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-learning, .btn-join, .btn-login {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .btn-learning:hover, .btn-join:hover, .btn-login:hover {
+        background-color: #218838;
+        text-decoration:none;
+        color: white
+    }
+
+    /* Hình ảnh khóa học */
+    .course-image {
+        display: block;
+        width: 90%;
+        height: auto;
+        margin: 20px auto;
+        border-radius: 5px;
+    }
+
+    /* Mô tả khóa học */
+    .course-description {
+        padding-top: 20px;
+        border-top: 1px solid #ccc;
+    }
+
+    .course-description h4 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .course-description p {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+    }
+</style>

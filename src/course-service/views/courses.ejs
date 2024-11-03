@@ -6,7 +6,7 @@
                 <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Courses</h5>
                 <h1>My Courses</h1>
             </div>
-            <a href="/courses/addCourse">Thêm mới</a>
+            <a href="/courses/addCourse"><button class="btn-warning a" >Thêm mới</button></a>
             <% if(courses) { %>
             <div class="row">
                 <% courses.forEach((course) => { %>
@@ -26,7 +26,7 @@
                                         <% if (course.Status === 'Draft') { %>
                                             <form action="/courses/reqCourse" method="post">
                                                 <input type="hidden" value="<%= course.Id %>" name="Course_id">
-                                                <button type="submit">Yêu cầu duyệt</button>
+                                                <button class="btn-warning" type="submit">Yêu cầu duyệt</button>
                                             </form>
                                         <% } %>
                                     </div>
@@ -42,4 +42,9 @@
     <!-- Team End -->
 
 
- 
+ <style>
+    .a {
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+ </style>

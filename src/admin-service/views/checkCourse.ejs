@@ -1,56 +1,164 @@
 <div class="c">
-    <h1>Lessons </h1>
-<table class="table" id="lesson-list">
-    <thead>
-        <tr>
-            <th>Title</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% lessons.forEach(lesson => { %>
+    <h1>Lessons</h1>
+    <table class="table" id="lesson-list">
+        <thead>
             <tr>
-                <td><a href="#"><%= lesson.Title %></a></td>
+                <th>Title</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% lessons.forEach(lesson => { %>
+                <tr>
+                    <td><a href="#" class="lesson-title" data-content="<%= lesson.Content %>"><%= lesson.Title %></a></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
 
-<h1>Exams </h1>
-<table class="table" id="exam-list">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Exam time</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% exams.forEach(exam => { %>
+    <h1>Exams</h1>
+    <table class="table" id="exam-list">
+        <thead>
             <tr>
-                <td><%= exam.Title %></td>
-                <td><%= exam.Exam_time %></td>
-                <td>
-                    <a href="/admin/checkExam/<%= exam.Id %>">Xem</a>
-                </td>
+                <th>Title</th>
+                <th>Exam time</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
-
+        </thead>
+        <tbody>
+            <% exams.forEach(exam => { %>
+                <tr>
+                    <td><%= exam.Title %></td>
+                    <td><%= exam.Exam_time %></td>
+                    <td>
+                        <a href="/admin/checkExam/<%= exam.Id %>">Xem</a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
 </div>
+
+<!-- Modal to display lesson content -->
+<div id="lessonModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-body">
+            <!-- Lesson content will be injected here -->
+        </div>
+    </div>
+</div>
+<script src="https://www.youtube.com/iframe_api"></script>
 <style>
-    .c {
-        background-color: rgba(255, 255, 255, 0.5);
-        margin-top: 20px;
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
     }
-    .c th, td {
-        color: blue;
+
+    .modal-content {
+        background-color: #fff;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 60%;
+        max-width: 800px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    input[type="submit"] {
-        background-color: transparent;
+
+    .modal-content h2 {
+        text-align: center;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover, .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Responsive modal for smaller screens */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 90%;
+        }
+    }
+
+    .video-container {
+    position: relative;
+}
+
+.video-overlay {
+    display: none; /* Ẩn menu điều khiển mặc định */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền mờ cho overlay */
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.video-container:hover .video-overlay {
+    display: flex; /* Hiển thị menu khi hover */
+}
+
+#play-pause-button,
+#forward-button,
+#backward-button {
+    background: none;
     border: none;
-    color: blue;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+    margin: 0 10px; /* Khoảng cách giữa các nút */
 }
-.c tr a {
-    text-decoration: none;
-}
- </style>
+
+</style>
+<script>
+    // Get modal elements
+    const modal = document.getElementById('lessonModal');
+    const modalBody = document.getElementById('modal-body');
+    const closeBtn = document.querySelector('.close');
+
+    // Function to open modal and display lesson content
+    document.querySelectorAll('.lesson-title').forEach(title => {
+        title.addEventListener('click', function(event) {
+            event.preventDefault();
+            const lessonContent = this.getAttribute('data-content'); // Lấy nội dung bài học
+            modalBody.innerHTML = `<p>${lessonContent}</p>`; // Hiển thị nội dung bài học
+            modal.style.display = 'flex';
+            convertOembedToIframe(modalBody);
+        });
+    });
+
+    // Close modal when the close button is clicked
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside of the modal content
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+    
+
+</script>
