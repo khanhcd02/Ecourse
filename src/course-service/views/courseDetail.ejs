@@ -4,14 +4,12 @@
     <thead>
         <tr>
             <th>Title</th>
-            <th>Content</th>
         </tr>
     </thead>
     <tbody>
         <% lessons.forEach(lesson => { %>
             <tr data-id="<%= lesson.Id %>">
                 <td><%= lesson.Title %></td>
-                <td><%= lesson.Content %></td>
             </tr>
         <% }) %>
     </tbody>

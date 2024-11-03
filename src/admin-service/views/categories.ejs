@@ -1,0 +1,297 @@
+<div class="category-management-container">
+    <h1 class="title">Manage Categories</h1>
+
+    <!-- Nút thêm danh mục -->
+    <button class="btn-show-add" onclick="toggleAddForm()">Add Category</button>
+
+    <!-- Form thêm mới danh mục, ẩn đi ban đầu -->
+    <div class="add-category-form" id="addCategoryForm" style="display: none;">
+        <form action="/admin/addCategory" method="post">
+            <label for="category-name">Category Name</label>
+            <input style="width: 20%;" type="text" id="category-name" name="Category_name" placeholder="Enter category name" required>
+            <button type="submit" class="btn-add">Add</button>
+        </form>
+    </div>
+
+    <!-- Bảng danh sách danh mục -->
+    <div class="category-list">
+        <h2>Category List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% categories.forEach(category => { %>
+                <tr>
+                    <td><%= category.Id %></td>
+                    <td>
+                        <input type="text" value="<%= category.Category_name %>" id="category-name-<%= category.Id %>" disabled>
+                    </td>
+                    <td>
+                        <label class="switch">
+                            <input id="status-<%= category.Id %>" type="checkbox" <% if (category.Status === 'ON') { %> checked <% } %> onchange="updateStatus(<%= category.Id %>)">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn-edit" id="edit-btn-<%= category.Id %>" onclick="editCategory(<%= category.Id %>)">Edit</button>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+
+    .category-management-container {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .btn-show-add {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-show-add:hover {
+        background-color: #218838;
+    }
+
+   
+    .add-category-form {
+        margin-bottom: 40px;
+    }
+
+    .add-category-form h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .add-category-form label {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .add-category-form input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .btn-add {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .btn-add:hover {
+        background-color: #218838;
+    }
+
+ 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        color: #333;
+    }
+
+ 
+    .btn-edit {
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-save {
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        color: white;
+        border: none;
+        margin-right: 5px;
+        cursor: pointer;
+        background-color: #28a745;
+    }
+
+    .btn-save:hover {
+        background-color: #218838;
+    }
+
+  
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+</style>
+<script>
+  
+function toggleAddForm() {
+    const form = document.getElementById('addCategoryForm');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+
+function editCategory(categoryId) {
+    const input = document.getElementById('category-name-' + categoryId);
+    const button = document.getElementById('edit-btn-' + categoryId);
+    
+    if (input.disabled) {
+        input.disabled = false;
+        button.innerText = 'Save';
+        button.classList.remove('btn-edit');
+        button.classList.add('btn-save');
+        button.onclick = function() { saveCategory(categoryId); };
+    }
+}
+
+
+function saveCategory(categoryId) {
+    const input = document.getElementById('category-name-' + categoryId);
+    const button = document.getElementById('edit-btn-' + categoryId);
+    fetch('/admin/updateCategory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            category_name: input.value,
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        input.disabled = true;
+        button.innerText = 'Edit';
+        button.classList.remove('btn-save');
+        button.classList.add('btn-edit');
+        button.onclick = function() { editCategory(categoryId); };
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+}
+
+// Cập nhật trạng thái (On/Off)
+function updateStatus(categoryId) {
+    const input = document.getElementById('status-' + categoryId);
+    fetch('/admin/updateStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            status: input.checked ? 'On' : 'Off' 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+}
+
+</script>

@@ -7,7 +7,9 @@ const bcrypt = require('bcryptjs');
 var cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const axios = require('axios');
 const cors = require('cors');
+var randomstring = require("randomstring");
 const User = require('./models/user');
 const db = require('../../config/db.config');
 const verifyLogin = require('../middleware/checkLogin');
@@ -30,11 +32,40 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/auth/login', (req,res)=>{
-  res.render('login')
+  res.render('../src/auth-service/views/login')
 })
 
 app.get('/auth/register', (req,res)=>{
-  res.render('signup')
+  res.render('../src/auth-service/views/signup')
+})
+
+app.post('/auth/register/verify', (req,res)=>{
+  const fullname = req.body.fullname;
+  const username = req.body.username;
+  const password = req.body.password;
+  const email = req.body.email;
+  const phone_number = req.body.phone_number;
+  const addUser = {
+    fullname,
+    username,
+    password,
+    avatar: null,
+    email,
+    phone_number
+  };
+  User.create(addUser, (err, result) => {
+    if (err) {
+      console.error('Error creating user:', err);
+      return res.status(500).send('Error creating user');
+    }
+    User.addRefreshToken(result.id, (err, resultRefresh) => {
+      if (err) {
+        console.error('Error refreshToken:', err);
+        return res.status(500).send('Error refreshToken');
+      }
+      res.redirect('/auth/login')
+    });
+  });
 })
 
 app.get('/auth/logout', verifyLogin, (req,res)=>{
@@ -69,10 +100,12 @@ passport.use( new LocalStrategy(
 app.post('/auth/login', (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res.status(400).json({
-        message: 'Something is not right',
-        user: user
-      });
+      return res.send(`
+        <script>
+            alert('Tài khoản hoặc mật khẩu không đúng!');
+            window.location.href = '/auth/login';
+        </script>
+    `);
     }
     req.login(user, { session: false }, (err) => {
       if (err) {
@@ -82,7 +115,8 @@ app.post('/auth/login', (req, res) => {
         userId: user.Id,
         Fullname: user.Fullname,
         Avatar: user.Avatar,
-        Role: user.Role
+        Role: user.Role,
+        Balance: user.Balance
       }
       const tokens = generateToken(userData)
       User.updateRefreshToken(userData.userId,tokens.refreshToken, (err, result) => {
@@ -135,7 +169,8 @@ app.post('/auth/token', (req, res) => {
         userId: user.Id,
         Fullname: user.Fullname,
         Avatar: user.Avatar,
-        Role: user.Role
+        Role: user.Role,
+        Balance: user.Balance
       }
       
       const accessToken = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, {
@@ -157,11 +192,23 @@ app.post('/auth/register', async (req, res) => {
     const fullname = req.body.fullname;
     const username = req.body.username;
     const password = req.body.password;
-    const email = req.body.email;
+    let email = req.body.email;
     const phone_number = req.body.sdt;
     
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    User.checkUsername(username, (err, results) => {
+      if (err) {
+        console.error('Error fetching checkUsername:', err);
+      } 
+      if(results){
+        return res.send(`
+          <script>
+              alert('Username đã tồn tại!');
+              window.location.href = '/auth/register';
+          </script>
+      `);
+      }
+    })
     const addUser = {
       fullname,
       username,
@@ -170,20 +217,14 @@ app.post('/auth/register', async (req, res) => {
       email,
       phone_number
     };
-
-    User.create(addUser, (err, result) => {
-      if (err) {
-        console.error('Error creating user:', err);
-        return res.status(500).send('Error creating user');
-      }
-      User.addRefreshToken(result.id, (err, resultRefresh) => {
-        if (err) {
-          console.error('Error refreshToken:', err);
-          return res.status(500).send('Error refreshToken');
-        }
-      });
-      res.redirect('/auth/login');
+    const verify_code = randomstring.generate(7);
+    const url = 'http://localhost:5678/webhook/51188df6-7616-4541-9ead-3a61a80d7585'; 
+    await axios.post(url, {
+      gmail: email,
+      code: verify_code
     });
+    res.render('../src/auth-service/views/verification', {addUser, v_code: verify_code})
+  
 
   } catch (err) {
     console.error('Error during registration:', err);

@@ -4,7 +4,6 @@ const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
 const Course = require('../models/course');
-const Category = require('../models/category');
 
 exports.courses = (req, res) => {  
   if(req.user.Role == 'teacher'){
@@ -16,6 +15,7 @@ exports.courses = (req, res) => {
         res.render('../../layout', { 
             title: 'courses', 
             user: req.user,
+            categories: req.categories,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courses.ejs'), 'utf8'), { courses: results })
         });
       });
@@ -26,18 +26,12 @@ exports.courses = (req, res) => {
 
 exports.addCourses = (req, res) => { 
     if (req.method === 'GET') {
-        Category.findALL((err, results) => {
-            if (err) {
-                console.error('Error fetching Category:', err);
-                res.redirect('/courses');
-            } else {
-                res.render('../../layout', { 
-                    title: 'add courses', 
-                    user: req.user,
-                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addCourse.ejs'), 'utf8'), { categories: results })
-                });
-            }
-        })
+        res.render('../../layout', { 
+            title: 'add courses', 
+            user: req.user,
+            categories: req.categories,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addCourse.ejs'), 'utf8'), { categories: req.categories })
+        });
     }else if (req.method === 'POST') {
         const { Name_course, Category_id, Tuition, Duration, Describe } = req.body;
         const Image = req.file ? req.file.filename : 'course-1.jpg';
@@ -76,6 +70,7 @@ exports.lessons = (req, res) => {
                     res.render('../../layout', { 
                       title: 'courses', 
                       user: req.user,
+                      categories: req.categories,
                       body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courseDetail.ejs'), 'utf8'), { lessons: resultsLesson, exams: resultsExam, courseId: req.params.courseId })
                     });
                 }
@@ -92,6 +87,7 @@ exports.addLesson = (req, res) => {
         res.render('../../layout', { 
             title: 'add lesson', 
             user: req.user,
+            categories: req.categories,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addLesson.ejs'), 'utf8'), { courseId: req.params.courseId })
         });
     }else if (req.method === 'POST') {
@@ -116,6 +112,7 @@ exports.addExam = (req, res) => {
         res.render('../../layout', { 
             title: 'add exam', 
             user: req.user,
+            categories: req.categories,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addExam.ejs'), 'utf8'), { courseId: req.params.courseId })
         });
     }else if (req.method === 'POST') {
@@ -140,6 +137,7 @@ exports.addExamDetail = (req, res) => {
         res.render('../../layout', { 
             title: 'add question', 
             user: req.user,
+            categories: req.categories,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'addQuestion.ejs'), 'utf8'), { examId: req.params.examId })
         });
     }else if (req.method === 'POST') {

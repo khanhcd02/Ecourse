@@ -125,6 +125,16 @@ const User = {
         callback(null, results[0]);
       });
     },
+
+    checkTrans: (User_id, callback) => {
+      const query = 'SELECT * FROM transactions WHERE User_id = ?';
+      db.query(query, [User_id], (err, results) => {
+        if (err) {
+          return callback(err, null);
+        }
+        callback(null, results);
+      });
+    },
 }
 
 module.exports = User;

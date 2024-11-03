@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="/signup.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+    <div class="verify">
+        <form action="/auth/register/verify" method="post">
+            <i class="glyphicon glyphicon-envelope" style="font-size: 34px; color: green;"></i>
+            <input type="hidden" name="fullname" value="<%= addUser.fullname %>">
+            <input type="hidden" name="username" value="<%= addUser.username %>">
+            <input type="hidden" name="password" value="<%= addUser.password %>">
+            <input type="hidden" name="avatar" value="<%= addUser.avatar %>">
+            <input type="hidden" name="email" value="<%= addUser.email %>">
+            <input type="hidden" name="phone_number" value="<%= addUser.phone_number %>">
+            <input type="hidden" name="v_code" id="v_code" value="<%= v_code %>">
+            <p>Đã gửi mã xác minh đến gmail!</p>
+            <input type="text" name="verify_code" id="verify_code" placeholder="verify_code" required>
+            <button class="btn-success" type="submit" name="button" onclick="verify()" value="verify">Xác nhận</button>
+        </form>
+        
+    </div>
+</body>
+</html>
+<script>
+    let v_code = document.getElementById("v_code").value;
+    function verify() {        
+        let verify_code = document.getElementById("verify_code").value;
+        console.log(verify_code)
+        if (v_code != verify_code) {
+            alert('mã xác thực không đúng')
+            event.preventDefault();
+        }
+    }
+</script>
+<style>
+    .verify {
+        height: 200px;
+        width: 30%;
+        margin: auto;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 25px;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+    }
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+    }
+</style>

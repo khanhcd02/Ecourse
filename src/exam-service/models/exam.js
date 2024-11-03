@@ -34,7 +34,7 @@ const Exam = {
   },
 
   updateProgressExams: (progress, callback) => {
-    const query = 'UPDATE track_progress SET Track_exams = ? WHERE Student_id = ? AND Course_id = ?';
+    const query = 'UPDATE enrollments SET Track_exams = ? WHERE Student_id = ? AND Course_id = ?';
       db.query(query, [progress.Track_exams, progress.Student_id, progress.Course_id], (err, results) => {
         if (err) {
           return callback(err, null);

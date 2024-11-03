@@ -3,7 +3,7 @@ const db = require('../../../config/db.config');
 
 const Category = {
 
-  findALL: (callback) => {
+  findALL: (x, callback) => {
     const query = 'SELECT * FROM categories WHERE Status = ?';
     db.query(query, ['ON'], (err, results) => {
       if (err) {

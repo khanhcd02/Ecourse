@@ -16,16 +16,16 @@
           <% courses.forEach(i => { %>
             <tr>
               <td><a href="/admin/checkCourse/<%= i.Id %>"><%= i.Name_course %></a></td>
-              <td><%= i.Image %></td>
-              <td><%= i.Category_id %></td>
-              <td><%= i.Teacher_id %></td>
+              <td><img src="<%= i.Image %>" style="height: 100px;width: auto;" ></td>
+              <td><%= i.Category_name %></td>
+              <td><%= i.Fullname %></td>
               <td><%= i.Tuition %></td>
               <td><%= i.Duration %></td>
               <td><%= i.Short_describe %></td>
               <td><form action="/admin/resolveReqCourse" method="post">
                 <input type="hidden" value="<%= i.Id %>" name="Course_id">
-                <button type="submit" name="action" value="approve">Chấp nhận</button>
-                <button type="submit" name="action" value="reject">Từ chối</button>
+                <button class="btn btn-success" type="submit" name="action" value="approve">Chấp nhận</button>
+                <button class="btn btn-danger" type="submit" name="action" value="reject">Từ chối</button>
               </form></td>
             </tr>
           <% }) %>

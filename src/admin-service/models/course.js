@@ -22,7 +22,7 @@ const Course = {
     },
 
     checkRequestCourse: (req, callback) => {
-        const query = 'SELECT * FROM doanweb.courses WHERE Status = ?';
+        const query = 'SELECT c.*, ca.Category_name, u.Fullname FROM courses c join users u on u.Id = c.Teacher_id join categories ca on ca.Id = c.Category_id WHERE c.Status = ?';
         db.query(query, ['Pending'], (err, results) => {
             if (err) {
             return callback(err, null);
@@ -48,6 +48,16 @@ const Course = {
             return callback(err, null);
             }
             callback(null, results);
+        });
+    },
+
+    findLessonDetailById: (Lesson_id, callback) => {
+        const query = 'SELECT * FROM doanweb.lessons WHERE Id = ?';
+        db.query(query, [Lesson_id], (err, results) => {
+            if (err) {
+            return callback(err, null);
+            }
+            callback(null, results[0]);
         });
     },
 

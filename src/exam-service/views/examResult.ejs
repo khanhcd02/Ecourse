@@ -1,9 +1,44 @@
-<div>
+<div class="c">
     <h2>Kết quả bài thi</h2>
     <p>Số câu trả lời đúng: <%= correctCount %> / <%= totalQuestions %></p>
-    <p>Điểm: <%= score %> %</p>
+    <p>Điểm: <%= score %></p>
     <% if (score < 70 ) { %>
         <p> Đạt 70 điểm để mở khóa bài tập tiếp theo!</p>
         <img src="/vdkn.jpg" height="300px" width="400px" alt="">
+    <% } else { %>
+        <div class="tick-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="16 8 10 14 8 12"></polyline>
+            </svg>
+        </div>
+        <br>
+        <h3>Đạt yêu cầu</h3><br>
     <% } %>
 </div>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin: 20px auto;
+        max-width: 50%;
+        text-align: center;
+    }
+    .tick-icon {
+        display: inline-block;
+        animation: scaleTick 0.5s ease alternate infinite;
+    }
+
+    @keyframes scaleTick {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.2);
+        }
+    }
+
+    svg {
+        width: 100px;
+        height: 100px;
+    }
+</style>

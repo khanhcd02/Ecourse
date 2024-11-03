@@ -4,7 +4,9 @@ const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
 const User = require('../models/user');
-const Teacher = require('../models/teacher')
+const Teacher = require('../models/teacher');
+const Category = require('../models/category');
+
 //const authenticateToken = require('../../../middleware/authMiddleware');
 
 exports.index = (req, res) => {
@@ -15,6 +17,7 @@ exports.success = (req, res) => {
   res.render('../../layout', { 
     title: 'success', 
     user: req.userData,
+    categories: req.categories,
     body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'transResult.ejs'), 'utf8'), {})
   });
 };
@@ -31,11 +34,20 @@ exports.profile = (req, res) => {
               console.error('Error fetching progress:', err);
               return res.status(500).send('Error fetching progress');
           } else {
-              res.render('../../layout', { 
-                title: 'Profile', 
-                user: req.userData,
-                body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'profile.ejs'), 'utf8'), { user: results, progress: progress})
-              });
+            Category.findALL({}, (err, resultsCate) => {
+              if (err) {
+                  console.error('Error fetching Category:', err);
+                  return res.status(500).send('Error fetching Category');
+              } else {
+                  global.categories = resultsCate;
+                  res.render('../../layout', { 
+                    title: 'Profile', 
+                    user: req.userData,
+                    categories: req.categories,
+                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'profile.ejs'), 'utf8'), { user: results, progress: progress})
+                  });
+                }
+            });
             }
         });
       }
@@ -57,6 +69,7 @@ exports.updateProfile = (req, res) => {
         res.render('../../layout', { 
           title: 'Profile', 
           user: req.userData,
+          categories: req.categories,
           body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'profile.ejs'), 'utf8'), { user: results})
         });
     }
@@ -73,6 +86,7 @@ exports.qrcode = (req, res) => {
         res.render('../../layout', { 
           title: 'Qrcode', 
           user: req.userData,
+          categories: req.categories,
           body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'qrcode.ejs'), 'utf8'), { user: results})
         });
     }
@@ -112,6 +126,15 @@ exports.joinCourses = (req, res) => {
     Amount: amount,
     Course_id: course_id
   }
+  if (amount > req.user.Balance) {
+    return res.send(`
+          <script>
+              alert('Có đủ tiền đâu mà đăng ký!');
+              window.location.href = '/user/qrcode';
+          </script>
+      `);
+  }
+    
   User.joinCourse(join, (err, resultsJoin) => {
     if (err) {
         console.error('Error fetching joinCourse:', err);
@@ -198,6 +221,7 @@ exports.Learning = (req, res) => {
                   res.render('../../layout', { 
                     title: 'courses', 
                     user: req.userData,
+                    categories: req.categories,
                     body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'courseDetail.ejs'), 'utf8'), { lessons: resultsLesson, exams: resultsExam, progress: results })
                   });
               }
@@ -231,6 +255,7 @@ exports.startLesson = (req, res) => {
           res.render('../../layout', { 
             title: 'lesson', 
             user: req.userData,
+            categories: req.categories,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'lessonDetail.ejs'), 'utf8'), { lesson: results, max_ordinal, track_lessons: checkResult.Track_lessons, course_id })
           });
         })
@@ -282,7 +307,25 @@ exports.checkRequestTeacher = (req, res) => {
       res.render('../../layout', { 
         title: 'checkRequestResult', 
         user: req.userData,
+        categories: req.categories,
         body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkReq.ejs'), 'utf8'), { checks: resultCheck, role: req.userData.Role })
+      });
+    }
+  })
+}
+
+exports.checkTrans = (req, res) => {
+  const id = req.userId
+  User.checkTrans(id, (err, resultCheck) => {
+    if (err) {
+        console.error('Error fetching checkRequestResult:', err);
+        return res.status(500).send('Error fetching checkRequestResult');
+    } else {
+      res.render('../../layout', { 
+        title: 'check trans', 
+        user: req.userData,
+        categories: req.categories,
+        body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkTrans.ejs'), 'utf8'), { checks: resultCheck})
       });
     }
   })

@@ -51,7 +51,7 @@
       <% if(user.Role === 'admin') { %>
         <li><button><a style="text-decoration: none;color: #000;" href="/admin/dashboard">Đến trang admin</a></button></li>
       <% } %>
-      <li><button>Lịch sử giao dịch</button></li>
+      <li><button><a style="text-decoration: none;color: #000;" href="/user/check/trans">Lịch sử giao dịch</a></button></li>
       <% if(user.Role === 'student') { %>
         <li><button><a style="text-decoration: none;color: #000;" href="/user/reqTeacher">Nâng cấp thành viên</a></button></li>
       <% } %>
@@ -76,7 +76,7 @@
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -106,7 +106,9 @@
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(228, 223, 223, 0.8);
+  overflow-y: auto;
+  max-height: 400px;
 }
 .tabcontent {
   animation: fadeEffect 1s; /* Fading effect takes 1 second */

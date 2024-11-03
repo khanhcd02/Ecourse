@@ -1,0 +1,44 @@
+<div class="c">
+    <h3 style="text-align: center;margin-top: 10px;">Lịch sử giao dịch</h3><br>
+    <table>
+        <thead>
+          <tr>
+            <th>Ngày giao dịch</th>
+            <th>Loại giao dịch</th>
+            <th>Số tiền</th>
+            <th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% checks.forEach(i => { %>
+            <tr>
+              <td><%= i.Transaction_date.toLocaleString('vi-VN') %></td>
+              <td><%= i.Transaction_type %></td>
+              <td><%= i.Amount %></td>
+              <td><%= i.Note %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+    
+</div>
+
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.7);
+        max-width: 60%;
+        min-height: 400px;
+        margin: 50px auto;
+        max-height: 500px;
+        overflow: auto;
+    }
+    table {
+        width: 100%; 
+    }
+
+    th, td {
+        padding: 10px; 
+    }
+
+
+</style>

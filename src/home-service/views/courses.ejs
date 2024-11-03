@@ -14,14 +14,35 @@
     </div>
     <!-- Header End -->
 
-
     <!-- Team Start -->
     <div class="container-fluid py-5">
-        <div class="container pt-5 pb-3">
+        <div style="background-color: rgba(255, 255, 255, 0.8);border-radius: 25px;" class="container pt-5 pb-3">
             <div class="text-center mb-5">
                 <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Courses</h5>
                 <h1>All Courses</h1>
             </div>
+            <form style="display: flex; align-items: center;margin-bottom: 10px;" method="GET" action="/home/courses">
+                <!-- Tìm kiếm theo từ khóa -->
+                <input class="form-control" style="width: 20%;margin-right: 10px;" type="text" name="keyword" placeholder="Search by keyword" value="<%= filters.keyword || '' %>" />
+            
+                <!-- Lọc theo danh mục -->
+                <select class="form-control" style="width: 20%;margin-right: 10px;" name="category">
+                    <option value="all">All Categories</option>
+                    <% categories.forEach((category) => { %>
+                        <option value="<%= category.Id %>" <%= filters.category == category.Id ? 'selected' : '' %>><%= category.Category_name %></option>
+                    <% }); %>
+                </select>
+            
+                <!-- Lọc theo thời gian -->
+                <select class="form-control" style="width: 20%;margin-right: 10px;" name="teacher">
+                    <option value="all">All Teacher</option>
+                    <% teachers.forEach((teacher) => { %>
+                        <option value="<%= teacher.Id %>" <%= filters.teacher == teacher.Id ? 'selected' : '' %>><%= teacher.Fullname %></option>
+                    <% }); %>
+                </select>
+            
+                <button class="btn btn-success" type="submit">Filter</button>
+              </form>
             <% if(courses) { %>
             <div class="row">
                 <% courses.forEach((course) => { %>
@@ -31,8 +52,8 @@
                             <img class="img-fluid" src="<%= course.Image ? course.Image : '/courses/course-1.jpg' %>" alt="">
                             <div class="bg-secondary p-4">
                                 <div class="d-flex justify-content-between mb-3">
-                                    <small class="m-0"><i class="fa fa-users text-primary mr-2"></i><%= course.Teacher_id %></small>
-                                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>01h 30m</small>
+                                    <small class="m-0"><i class="fa fa-users text-primary mr-2"></i><%= course.Fullname %></small>
+                                    <small class="m-0"><i class="far fa-clock text-primary mr-2"></i><%= course.Duration %>h</small>
                                 </div>
                                 <a class="h5" href="/home/courses/<%= course.Id %>"><%= course.Name_course %></a>
                                 <div class="border-top mt-4 pt-4">
@@ -47,9 +68,62 @@
                 <% }); %>
             </div>
             <% } %>
+            <div class="text-center mb-5">
+                <div id="pagination">
+                    <% if (page > 1) { %>
+                    <a href="?page=<%= page - 1 %>&perPage=<%= perPage %>&keyword=<%= filters.keyword %>&category=<%= filters.category %>&teacher=<%= filters.teacher %>">Previous</a>
+                    <% } %>
+                
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                    <a href="?page=<%= i %>&perPage=<%= perPage %>&keyword=<%= filters.keyword %>&category=<%= filters.category %>&teacher=<%= filters.teacher %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                
+                    <% if (page < totalPages) { %>
+                    <a href="?page=<%= page + 1 %>&perPage=<%= perPage %>&keyword=<%= filters.keyword %>&category=<%= filters.category %>&teacher=<%= filters.teacher %>">Next</a>
+                    <% } %>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Team End -->
+<style>
+    #pagination {
+        display: inline-block;
+    }
 
+    #pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
 
- 
+    #pagination a:hover:not(.active) {background-color: #b5adad;}
+    #pagination a {
+        border-radius: 5px;
+    }
+
+    #pagination a.active {
+        border-radius: 5px;
+        background-color: #82d285;
+    }
+    .pagination a {
+        transition: background-color .3s;
+    }
+    .pagination a {
+        border: 1px solid #ddd; /* Gray */
+    }
+    .pagination a:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    .pagination a:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+</style>
