@@ -1,0 +1,53 @@
+<div class="c">
+  <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Xử lý</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lessons.forEach(l => { %>
+          <tr>
+            <td><a href="/admin/checkUpdateLesson/<%= l.Lesson_id %>"><%= l.Title %></a></td>
+            <td>
+              <form action="/admin/resolveReqUpdate" method="post">
+                <input type="hidden" value="<%= l.Lesson_id %>" name="Lesson_id">
+                <button class="btn btn-success" type="submit" name="action" value="approve">Chấp nhận</button>
+                <button class="btn btn-danger" type="submit" name="action" value="reject">Từ chối</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+  </table>
+</div>
+
+<!-- Modal for enlarged image -->
+<div id="imageModal" class="modal">
+<span class="close">&times;</span>
+<img class="modal-content" id="modalImage">
+</div>
+
+<style>
+  .c {
+      background-color: rgba(255, 255, 255, 0.5);
+      max-width: 100%;
+      min-height: 400px;
+      margin: 50px auto;
+  }
+  table {
+      width: 100%; 
+  }
+  th, td {
+      padding: 10px; 
+  }
+  .btnReq {
+      display: block; 
+      margin: 0 auto;
+      padding: 10px 20px;
+  }
+
+
+</style>
+

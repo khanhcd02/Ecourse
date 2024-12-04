@@ -25,6 +25,8 @@ router.post('/addLesson/:courseId', verifyTeacher, courseController.addLesson);
 router.get('/:courseId', verifyTeacher, courseController.lessons);
 router.get('/addExam/:courseId', verifyTeacher, courseController.addExam);
 router.post('/addExam/:courseId', verifyTeacher, courseController.addExam);
+router.get('/update/:lessionId', verifyTeacher, courseController.updateLesson);
+router.post('/update/:lessionId', verifyTeacher, courseController.updateLesson);
 router.get('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
 router.post('/Exam/:examId', verifyTeacher, courseController.addExamDetail);
 router.post('/update-lessons-order', verifyTeacher, courseController.updateLessonsOrder);

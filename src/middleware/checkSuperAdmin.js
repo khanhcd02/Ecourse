@@ -9,7 +9,7 @@ const verifyAdmin = (req,res,next) => {
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         req.user = decoded
-        if(decoded.Role === 'admin'||decoded.Role === 'super_admin'){
+        if(decoded.Role === 'super_admin'){
             next()
         }else{
             res.redirect("/home/");

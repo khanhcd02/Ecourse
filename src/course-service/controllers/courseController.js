@@ -107,6 +107,54 @@ exports.addLesson = (req, res) => {
     }
 };
 
+exports.updateLesson = (req, res) => { 
+    if (req.method === 'GET') {
+        Course.checkDuplicateLesson(req.params.lessionId, (err, result) => {
+            if (err) {
+                console.error('Error check Duplicate Lesson:', err);
+                return res.status(500).send('Server error');
+            }
+            if(result.length == 0){
+                Course.duplicateLesson(req.params.lessionId, (err, duplicate_result) => {
+                    if (err) {
+                        console.error('Error Duplicate Lesson:', err);
+                        return res.status(500).send('Server error');
+                    }
+                    res.render('../../layout', { 
+                        title: 'update lesson', 
+                        user: req.user,
+                        categories: req.categories,
+                        body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'updateLesson.ejs'), 'utf8'), { courseId: req.params.courseId, lesson: duplicate_result })
+                    });
+                });
+            }else{
+                res.render('../../layout', { 
+                    title: 'update lesson', 
+                    user: req.user,
+                    categories: req.categories,
+                    body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'updateLesson.ejs'), 'utf8'), { courseId: req.params.courseId, lesson: result[0] })
+                });
+            }
+        });
+
+    }else if (req.method === 'POST') {
+        const { Title, Content, Status, Old_content } = req.body;
+        const uLesson = {
+            Lesson_id: req.params.lessionId,
+            Title, 
+            Content: Content || Old_content,
+            Status
+        }
+        Course.updateLesson(uLesson, (err, result) => {
+            if (err) {
+                console.error('Error adding course:', err);
+                return res.status(500).send('Server error');
+            }
+            res.redirect(`/courses/`);
+        });
+    }
+};
+
 exports.addExam = (req, res) => { 
     if (req.method === 'GET') {
         res.render('../../layout', { 

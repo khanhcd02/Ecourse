@@ -32,6 +32,31 @@ const Course = {
       callback(null, results);
     });
   },
+
+  checkDuplicateLesson: (lesson_id, callback) => {
+    const query = 'SELECT * FROM duplicate_lessons WHERE Lesson_id = ?';
+    db.query(query, [lesson_id], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
+  },
+
+  duplicateLesson: (lesson_id, callback) => {
+    const query = `
+        INSERT INTO duplicate_lessons (Lesson_id, Title, Content)
+        SELECT Id, Title, Content
+        FROM lessons
+        WHERE Id = ?
+    `;
+    db.query(query, [lesson_id], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
+  },
   
   findExam: (course_id, callback) => {
     const query = 'SELECT * FROM exams WHERE Course_id = ?';
@@ -61,6 +86,16 @@ const Course = {
         WHERE Course_id = ?
     `;
     db.query(query, [newLesson.Title, newLesson.Course_id, newLesson.Content, newLesson.Course_id], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
+  },
+
+  updateLesson: (uLesson, callback) => {
+    const query = `UPDATE duplicate_lessons SET Title = ?, Content = ?, Status = ? WHERE Lesson_id = ?`;
+    db.query(query, [uLesson.Title, uLesson.Content, uLesson.Status, uLesson.Lesson_id], (err, results) => {
       if (err) {
         return callback(err, null);
       }

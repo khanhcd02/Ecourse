@@ -6,12 +6,15 @@ const jwt = require('jsonwebtoken');
 
 router.get('/getReqTeacher', verifyAdmin, adminController.getReqTeacher);
 router.get('/getReqCourse', verifyAdmin, adminController.getReqCourse);
+router.get('/getReqUpdate', verifyAdmin, adminController.getReqUpdate);
 router.get('/dashboard', verifyAdmin, adminController.dashboard);
 router.get('/checkCourse/:Course_id', verifyAdmin, adminController.checkCourse);
 router.get('/checkExam/:Exam_id', verifyAdmin, adminController.checkExam);
 router.get('/checkLesson/:Lesson_id', verifyAdmin, adminController.checkLesson);
+router.get('/checkUpdateLesson/:Lesson_id', verifyAdmin, adminController.checkUpdateLesson);
 router.post('/resolveReqTeacher', verifyAdmin, adminController.resolveReqTeacher);
 router.post('/resolveReqCourse', verifyAdmin, adminController.resolveReqCourse);
+router.post('/resolveReqUpdate', verifyAdmin, adminController.resolveReqUpdate);
 router.get('/categories', verifyAdmin, adminController.getCategories);
 router.post('/addCategory', verifyAdmin, adminController.addCategory);
 router.post('/updateCategory', verifyAdmin, adminController.updateCategory);

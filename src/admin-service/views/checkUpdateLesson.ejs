@@ -1,0 +1,26 @@
+<div class="c">
+    <div id="Old_content" style="display: none;"><%- Old_lesson.Content %></div>
+
+    <div id="getOldContent"></div>
+    
+</div>
+<div class="c">
+    <div id="content" style="display: none;"><%- lesson.Content %></div>
+
+    <div id="getContent"></div>
+    
+</div>
+<script src="/oembed.js"></script>
+<script>
+    var longText = document.getElementById('content').innerHTML;
+    document.getElementById('getContent').innerHTML = longText;
+    var longText = document.getElementById('Old_content').innerHTML;
+    document.getElementById('getOldContent').innerHTML = longText;
+</script>
+<style>
+    .c {
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+        min-height: 100px;
+    }
+</style>

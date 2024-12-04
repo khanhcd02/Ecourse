@@ -10,6 +10,7 @@
         <% lessons.forEach(lesson => { %>
             <tr data-id="<%= lesson.Id %>">
                 <td><%= lesson.Title %></td>
+                <td><a href="/courses/update/<%= lesson.Id %>">Sửa</a></td>
             </tr>
         <% }) %>
     </tbody>

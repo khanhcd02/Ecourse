@@ -35,6 +35,19 @@ exports.getReqCourse = (req, res) => {
     });
 };
 
+exports.getReqUpdate = (req, res) => {  
+    Course.checkRequestLesson({},(err, results) => {
+        if (err) {
+            console.error('Error fetching checkRequestLesson:', err);
+        } 
+        res.render('../../adminLayout', { 
+            title: 'Request Update', 
+            user: req.user,
+            body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'updateRequest.ejs'), 'utf8'), { lessons: results })
+        });
+    });
+};
+
 exports.dashboard = (req, res) => {  
     Stats.getReceipts({},(err, results) => {
         if (err) {
@@ -156,6 +169,32 @@ exports.resolveReqCourse = (req, res) => {
     
 };
 
+exports.resolveReqUpdate = (req, res) => { 
+    const action = req.body.action;
+    const Lesson_id = req.body.Lesson_id;
+    if (action === 'approve') {
+        Course.approveRequestUpdate(Lesson_id,(err, resultsCheck) => {
+            if (err) {
+                console.error('Error fetching approveRequestUpdate:', err);
+            }
+            Course.merge(Lesson_id,(err, results) => {
+                if (err) {
+                    console.error('Error fetching approveRequestUpdate:', err);
+                } 
+                res.redirect('/admin/getReqUpdate')
+            });
+        });
+    } else if (action === 'reject') {
+        Course.rejectRequestUpdate(Lesson_id,(err, results) => {
+            if (err) {
+                console.error('Error fetching rejectRequestUpdate:', err);
+            } 
+            res.redirect('/admin/getReqUpdate')
+        });
+    }
+    
+};
+
 exports.checkCourse = (req, res) => {  
     const Course_id = req.params.Course_id;
     Course.findLessonById(Course_id,(err, resultsLesson) => {
@@ -185,6 +224,25 @@ exports.checkLesson = (req, res) => {
             title: 'Check Lesson', 
             user: req.user,
             body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkLesson.ejs'), 'utf8'), { lesson: resultsLesson})
+        });
+    });
+};
+
+exports.checkUpdateLesson = (req, res) => {  
+    const Lesson_id = req.params.Lesson_id;
+    Course.findLessonDetailById(Lesson_id,(err, Old_lesson) => {
+        if (err) {
+            console.error('Error fetching checkUpdateLesson:', err);
+        } 
+        Course.getUpdateLessonById(Lesson_id,(err, updateLesson) => {
+            if (err) {
+                console.error('Error fetching getUpdateLessonById:', err);
+            } 
+            res.render('../../adminLayout', { 
+                title: 'Check Lesson', 
+                user: req.user,
+                body: ejs.render(fs.readFileSync(path.join(__dirname, '../views', 'checkUpdateLesson.ejs'), 'utf8'), { Old_lesson: Old_lesson, lesson: updateLesson})
+            });
         });
     });
 };
